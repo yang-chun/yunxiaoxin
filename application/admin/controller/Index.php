@@ -37,7 +37,7 @@ class Index extends Base
             } else {
                 $data['appid'] = input('appid');
                 $data['appsecret'] = input('appsecret');
-//                $data['user_id'] = session('user_id');
+//                $data['admin_id'] = session('admin_id');
                 $res = db('mp')->insert($data);
                 if ($res) {
                     return ['status' => 1, 'msg' => '新增成功'];
@@ -45,7 +45,7 @@ class Index extends Base
             }
             return ['status' => 0, 'msg' => '数据库错误'];
         }
-        $info = db('mp')->where('user_id', 1)->find();
+        $info = db('mp')->where('admin_id', 1)->find();
         return view('', ['info' => $info]);
     }
 }

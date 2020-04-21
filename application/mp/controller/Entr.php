@@ -18,18 +18,19 @@ use think\Db;
 class Entr
 {
 
-    private $mid;
+    private $mpid;
 
-    public function index($mid)
+    public function index($mpid)
     {
+
         if (empty($_GET['echostr']) && empty($_GET["signature"]) && empty ($_GET["nonce"])) {
             exit('Access denied');
         }
-        if (empty($mid) || !is_numeric($mid)) {
+        if (empty($mpid) || !is_numeric($mpid)) {
             exit;
         }
-        $this->mid = $mid;
-        if (!$mpInfo = getMpInfo($mid)) {
+        $this->mid = $mpid;
+        if (!$mpInfo = getMpInfo($mpid)) {
             exit();
         }
         $options = array(
@@ -48,7 +49,7 @@ class Entr
             $weObj->valid();
             exit;
         }
-        session('mid', $mid);
+        session('mpid', $mpid);
         session('mp_options', $options);
         $weObj = new \Wechat($options);
         $weObj->valid();

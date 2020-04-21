@@ -1,0 +1,4 @@
+<?php
+//000000001800
+ exit();?>
+think_serialize:a:20:{s:2:"id";i:14;s:8:"admin_id";N;s:4:"name";s:12:"测试一下";s:5:"appid";s:6:"112212";s:9:"appsecret";s:4:"1212";s:9:"origin_id";s:4:"1212";s:4:"type";i:1;s:6:"status";i:1;s:11:"valid_token";s:0:"";s:12:"valid_status";i:0;s:5:"token";s:0:"";s:14:"encodingaeskey";s:0:"";s:9:"mp_number";s:1:"1";s:4:"desc";s:4:"1212";s:4:"logo";s:64:"http://www.rha.com/uploads/15/5a5a2ded5ce40acc243f9209d12fb5.jpg";s:6:"qrcode";s:64:"http://www.rha.com/uploads/15/5a5a2ded5ce40acc243f9209d12fb5.jpg";s:11:"create_time";i:1587020046;s:10:"login_name";s:0:"";s:6:"is_use";i:1;s:12:"company_name";N;}

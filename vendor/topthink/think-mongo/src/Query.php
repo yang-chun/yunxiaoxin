@@ -22,6 +22,7 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use think\Collection;
 use think\db\Query as BaseQuery;
+use think\db\Where;
 use think\Exception;
 
 class Query extends BaseQuery
@@ -324,55 +325,34 @@ class Query extends BaseQuery
      */
     protected function parseWhereExp($logic, $field, $op, $condition, array $param = [], $strict = false)
     {
-        $logic = '$' . strtolower($logic);
-        if ($field instanceof \Closure) {
-            $this->options['where'][$logic][] = is_string($op) ? [$op, $field] : $field;
+        if ($field instanceof $this) {
+            $this->options['where'] = $field->getOptions('where');
             return $this;
         }
-        $where = [];
+
+        $logic = '$' . strtolower($logic);
+
+        if ($field instanceof Where) {
+            $this->options['where'][$logic] = $field->parse();
+            return $this;
+        }
+
         if ($strict) {
             // 使用严格模式查询
-            $where[$field] = [$field, $op, $condition];
-        } elseif (is_null($op) && is_null($condition)) {
-            if (is_array($field)) {
-                if (key($field) !== 0) {
-                    $where = [];
-                    foreach ($field as $key => $val) {
-                        $where[$key] = !is_scalar($val) ? $val : [$key, '=', $val];
-                    }
-                } else {
-                    // 数组批量查询
-                    $where = $field;
-                }
-
-                if (!empty($where)) {
-                    $this->options['where'][$logic] = isset($this->options['where'][$logic]) ? array_merge($this->options['where'][$logic], $where) : $where;
-                }
-                return $this;
-            } elseif ($field) {
-                // 字符串查询
-                $where[] = [$field, 'null', ''];
-            } else {
-                $where = '';
-            }
-        } elseif (is_array($op)) {
-            $where[$field] = $param;
-        } elseif (in_array(strtolower($op), ['null', 'notnull', 'not null'])) {
-            // null查询
-            $where[$field] = [$field, $op, ''];
-        } elseif (is_null($condition)) {
-            // 字段相等查询
-            $where[$field] = [$field, '=', $op];
-        } else {
-            $where[$field] = [$field, $op, $condition];
+            $where = [$field, $op, $condition, $logic];
+        } elseif (is_array($field)) {
+            // 解析数组批量查询
+            return $this->parseArrayWhereItems($field, $logic);
+        } elseif ($field instanceof \Closure) {
+            $where = $field;
+        } elseif (is_string($field)) {
+            $where = $this->parseWhereItem($logic, $field, $op, $condition, $param);
         }
 
         if (!empty($where)) {
-            if (!isset($this->options['where'][$logic])) {
-                $this->options['where'][$logic] = [];
-            }
-            $this->options['where'][$logic] = array_merge($this->options['where'][$logic], $where);
+            $this->options['where'][$logic][] = $where;
         }
+
         return $this;
     }
 
@@ -692,30 +672,49 @@ class Query extends BaseQuery
     /**
      * 查询数据转换为模型对象
      * @access public
-     * @param array $result     查询数据
-     * @param array $options    查询参数
-     * @param bool  $resultSet  是否为数据集查询
+     * @param  array $result     查询数据
+     * @param  array $options    查询参数
+     * @param  bool  $resultSet  是否为数据集查询
+     * @param  array $withRelationAttr  关联字段获取器
      * @return void
      */
-    protected function resultToModel(&$result, $options = [], $resultSet = false)
+    protected function resultToModel(&$result, $options = [], $resultSet = false, $withRelationAttr = [])
     {
+        // 动态获取器
+        if (!empty($options['with_attr']) && empty($withRelationAttr)) {
+            foreach ($options['with_attr'] as $name => $val) {
+                if (strpos($name, '.')) {
+                    list($relation, $field) = explode('.', $name);
+
+                    $withRelationAttr[$relation][$field] = $val;
+                    unset($options['with_attr'][$name]);
+                }
+            }
+        }
 
         $condition = (!$resultSet && isset($options['where']['$and'])) ? $options['where']['$and'] : null;
         $result    = $this->model->newInstance($result, $condition);
 
+        // 动态获取器
+        if (!empty($options['with_attr'])) {
+            $result->setModelAttrs($options['with_attr']);
+        }
+
         // 关联查询
         if (!empty($options['relation'])) {
-            $result->relationQuery($options['relation']);
+            $result->relationQuery($options['relation'], $withRelationAttr);
         }
 
         // 预载入查询
         if (!$resultSet && !empty($options['with'])) {
-            $result->eagerlyResult($result, $options['with']);
+            $result->eagerlyResult($result, $options['with'], $withRelationAttr);
         }
 
         // 关联统计
         if (!empty($options['with_count'])) {
-            $result->relationCount($result, $options['with_count']);
+            foreach ($options['with_count'] as $val) {
+                $result->relationCount($result, $val[0], $val[1], $val[2]);
+            }
         }
 
     }

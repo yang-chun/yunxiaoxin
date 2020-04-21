@@ -185,13 +185,15 @@ class Connection
                 $this->config['pk'] = 'id';
             }
 
-            $host = 'mongodb://' . ($config['username'] ? "{$config['username']}" : '') . ($config['password'] ? ":{$config['password']}@" : '') . $config['hostname'] . ($config['hostport'] ? ":{$config['hostport']}" : '');
+            if (empty($config['dsn'])) {
+                $config['dsn'] = 'mongodb://' . ($config['username'] ? "{$config['username']}" : '') . ($config['password'] ? ":{$config['password']}@" : '') . $config['hostname'] . ($config['hostport'] ? ":{$config['hostport']}" : '');
+            }
 
             if ($config['debug']) {
                 $startTime = microtime(true);
             }
 
-            $this->links[$linkNum] = new Manager($host, $this->config['params']);
+            $this->links[$linkNum] = new Manager($config['dsn'], $config['params']);
 
             if ($config['debug']) {
                 // 记录数据库连接信息
@@ -390,7 +392,7 @@ class Connection
      */
     private function convertObjectID(&$data)
     {
-        if (isset($data['_id'])) {
+        if (isset($data['_id']) && is_object($data['_id'])) {
             $data['id'] = $data['_id']->__toString();
             unset($data['_id']);
         }
@@ -466,6 +468,10 @@ class Connection
 
                 if (isset($options['sort'])) {
                     $this->queryStr .= '.sort(' . json_encode($options['sort']) . ')';
+                }
+
+                if (isset($options['skip'])) {
+                    $this->queryStr .= '.skip(' . $options['skip'] . ')';
                 }
 
                 if (isset($options['limit'])) {
@@ -829,9 +835,13 @@ class Connection
         $pk = $query->getPk($options);
 
         if (empty($options['where'])) {
+            if ($this->getConfig('pk_convert_id') && '_id' == $pk) {
+                $pk = 'id';
+            }
+
             // 如果存在主键数据 则自动作为更新条件
             if (is_string($pk) && isset($data[$pk])) {
-                $where[$pk] = $data[$pk];
+                $where[$pk] = [$pk, '=', $data[$pk]];
                 $key        = 'mongo:' . $options['table'] . '|' . $data[$pk];
                 unset($data[$pk]);
             } elseif (is_array($pk)) {
@@ -852,6 +862,7 @@ class Connection
                 throw new Exception('miss update condition');
             } else {
                 $options['where']['$and'] = $where;
+                $query->setOption('where', $options['where']);
             }
         } elseif (!isset($key) && is_string($pk) && isset($options['where']['$and'][$pk])) {
             $key = $this->getCacheKey($options['where']['$and'][$pk], $options);
@@ -882,6 +893,8 @@ class Connection
 
             $query->trigger('after_update');
         }
+
+        $query->setOption('where', []);
 
         return $result;
     }

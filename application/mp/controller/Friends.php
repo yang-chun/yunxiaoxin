@@ -59,7 +59,7 @@ class Friends extends Base
         $post['times'] = $times;
         $post['need'] = $need;
         $post['sex'] = $sex;
-        $FriendList = MpFriends::where(['mpid' => $this->mid, 'subscribe' => 1])
+        $FriendList = MpFriends::where(['mpid' => $this->mpid, 'subscribe' => 1])
             ->where($where)
             ->order('subscribe_time DESC')->paginate(20,false,['query'=>input()]);
         $this->assign('friendList', $FriendList);
@@ -78,15 +78,15 @@ class Friends extends Base
         $next_openid = isset($IN['next_openid']) ? $IN['next_openid'] : null;
         $wechatObj = getWechatActiveObj();
         $table = config('database.prefix') . 'syn_openid';
-        $sql = "DELETE FROM {$table} WHERE openid IN (SELECT * FROM(SELECT openid FROM {$table} WHERE mpid = ".intval($this->mid)." GROUP BY openid HAVING COUNT(openid) > 1) AS b) AND id NOT IN (SELECT * FROM (SELECT MIN(id) FROM {$table} WHERE mpid = ".intval($this->mid)."  GROUP BY openid HAVING COUNT(openid) > 1) AS c)";
+        $sql = "DELETE FROM {$table} WHERE openid IN (SELECT * FROM(SELECT openid FROM {$table} WHERE mpid = ".intval($this->mpid)." GROUP BY openid HAVING COUNT(openid) > 1) AS b) AND id NOT IN (SELECT * FROM (SELECT MIN(id) FROM {$table} WHERE mpid = ".intval($this->mpid)."  GROUP BY openid HAVING COUNT(openid) > 1) AS c)";
         Db::execute($sql);
-        $opneidTotal = Db::name('syn_openid')->where('mpid', '=', $this->mid)
+        $opneidTotal = Db::name('syn_openid')->where('mpid', '=', $this->mpid)
             ->distinct(true)
             ->field('openid')
             ->count();
-        $friendTotal = session($this->mid . 'friendTotal');
+        $friendTotal = session($this->mpid . 'friendTotal');
         if ($opneidTotal >= $friendTotal  && $friendTotal >0) {
-            $synOpenids = Db::name('syn_openid')->where('mpid', '=', $this->mid)
+            $synOpenids = Db::name('syn_openid')->where('mpid', '=', $this->mpid)
                 ->distinct(true)
                 ->field('openid')
                 ->paginate(100);
@@ -98,10 +98,10 @@ class Friends extends Base
                 $friends_array = $wechatObj->getUsersInfo($openids);
                 if (isset($friends_array['user_info_list']) && is_array($friends_array['user_info_list'])) {
                     foreach ($friends_array['user_info_list'] as $value) {
-                        $value['mpid'] = $this->mid;
+                        $value['mpid'] = $this->mpid;
                         $value['tagid_list'] = @json_encode($value['tagid_list'], true);
-                        if (Db::name('mp_friends')->where(['mpid' => $this->mid, 'openid' => $value['openid']])->field('id')->find()) {
-                            Db::name('mp_friends')->where(['mpid' => $this->mid, 'openid' => $value['openid']])->update($value);
+                        if (Db::name('mp_friends')->where(['mpid' => $this->mpid, 'openid' => $value['openid']])->field('id')->find()) {
+                            Db::name('mp_friends')->where(['mpid' => $this->mpid, 'openid' => $value['openid']])->update($value);
                         } else {
                             Db::name('mp_friends')->insert($value);
                         }
@@ -118,19 +118,19 @@ class Friends extends Base
             } else {
                 $this->assign('jdtCss', '100%');
                 $this->assign('text', '同步完成');
-                Db::name('syn_openid')->where('mpid', '=', $this->mid)->delete();
+                Db::name('syn_openid')->where('mpid', '=', $this->mpid)->delete();
             }
             return view('friend');
         }
         $friendList = $wechatObj->getUserList($next_openid);
-        session($this->mid . 'friendTotal', $friendList['total']);
+        session($this->mpid . 'friendTotal', $friendList['total']);
         if (!empty($friendList) && $friendList['count'] > 0) {
             $openids = array_chunk($friendList['data']['openid'], 5000);
             foreach ($openids as $key => $val) {
                 foreach ($val as $key1 => $opneid) {
                     $openid_list[$key][$key1] = [
                         'openid' => $opneid,
-                        'mpid' => $this->mid
+                        'mpid' => $this->mpid
                     ];
                 }
                 Db::name('syn_openid')->insertAll($openid_list[$key]);
@@ -165,14 +165,14 @@ class Friends extends Base
                 $results = $wechatObj->getUserInfo($val);
                 if ($results) {
                     $friends[$key] = $results;
-                    $friends[$key]['mpid'] = $this->mid;
+                    $friends[$key]['mpid'] = $this->mpid;
                     $friends[$key]['tagid_list'] = json_encode($friends[$key]['tagid_list']);
                     if (!empty($friends[$key])) {
-                        if (Db::name('mp_friends')->where(['mpid' => $this->mid, 'openid' => $val])->find()) {
-                            Db::name('mp_friends')->where(['mpid' => $this->mid, 'openid' => $val])->update($friends[$key]);
+                        if (Db::name('mp_friends')->where(['mpid' => $this->mpid, 'openid' => $val])->find()) {
+                            Db::name('mp_friends')->where(['mpid' => $this->mpid, 'openid' => $val])->update($friends[$key]);
                             $update = true;
                         } else {
-                            $insert = Db::name('mp_friends')->where(['mpid' => $this->mid, 'openid' => $val])->insert($friends[$key]);
+                            $insert = Db::name('mp_friends')->where(['mpid' => $this->mpid, 'openid' => $val])->insert($friends[$key]);
                         }
                     }
                 } else {

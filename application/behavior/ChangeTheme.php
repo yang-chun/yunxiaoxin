@@ -20,7 +20,7 @@ class ChangeTheme
         $root_path = Env::get('root_path');
         $model = Request::module();
         if (Request::isMobile()) {
-            $view_path = $root_path . 'themes/mobile/' . $model . '/';
+            $view_path = $root_path . 'themes/pc/' . $model . '/';
         } else {
             $view_path = $root_path . 'themes/pc/' . $model . '/';
         }

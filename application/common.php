@@ -546,6 +546,17 @@ function getAdmin()
     }
 }
 
+function getPlatformAdmin()
+{
+    if (empty(session('platform_admin')) && empty(cookie('platform_admin'))) {
+        return false;
+    } else {
+        $arr1 = session('platform_admin') ? session('platform_admin') : [];
+        $arr2 = cookie('platform_admin') ? cookie('platform_admin') : [];
+        return $_admin = array_merge($arr1, $arr2);
+    }
+}
+
 /**
  * 扩展应用 URL 生成
  * @author geeson myrhzq@qq.com

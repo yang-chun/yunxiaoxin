@@ -1,0 +1,142 @@
+html {
+    font-size : 20px;
+}
+
+@media only screen and (min-width: 300px){
+    html {
+        font-size: 23px !important;
+    }
+}
+@media only screen and (min-width: 401px){
+    html {
+        font-size: 25px !important;
+    }
+}
+@media only screen and (min-width: 428px){
+    html {
+        font-size: 26.75px !important;
+    }
+}
+@media only screen and (min-width: 481px){
+    html {
+        font-size: 30px !important; 
+    }
+}
+@media only screen and (min-width: 569px){
+    html {
+        font-size: 35px !important; 
+    }
+}
+@media only screen and (min-width: 641px){
+    html {
+        font-size: 40px !important; 
+    }
+}
+
+body{
+    background: #F8F8F8;
+}
+
+*{
+    padding: 0;
+    margin: 0;
+}
+
+
+.top_box{
+    width: 100%;
+    height: 12rem;
+    background: url('../images/gongzicha-bg.png')no-repeat center;
+    background-size:100% 100%;
+    color: #fff;
+}
+
+.top_cent{
+    padding: 1.8rem 1rem;
+}
+
+.top_cent .title{
+    font-size: 1rem;
+}
+
+.top_cent .month{
+    margin-top: 0.2rem;
+    margin-bottom: 0.9rem;
+    font-size: 2rem;
+}
+
+.top_cent .years{
+    font-size: 1.2rem;
+}
+
+.list{
+    background: #fff;
+    padding: 24px 1rem;
+    margin-top: 0.8rem;
+    display: flex;
+}
+
+.list_l{
+    width: 50%;
+    line-height: 70px;
+}
+
+.list_r{
+    width: 50%;
+    line-height: 70px;
+    margin: auto 0;
+    text-align: right;
+    font-size: 1rem;
+}
+
+.list_l .date{
+    color: #252932;
+}
+
+.list_l .info{
+    color: #A4A5A7;
+}
+
+.list_r .money{
+    color: #1F53FF;
+}
+
+/* 工资条详情 */
+
+.detalis_top_box{
+    height: 4rem;
+    background: #1F53FF;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    color: #fff;
+}
+
+.detalis_top_box .top_l{
+    width: 49%;
+}
+
+.detalis_top_box .top_r{
+    width: 49%;
+    font-size: 1.5rem;
+    text-align: right;
+}
+
+.detalis_content_box .detalis_list{
+    padding-left:1rem;
+    padding-right:1rem;
+    padding-top:1rem;
+    font-size: 1rem;
+    display: flex;
+}
+
+.detalis_list .title{
+    width: 30%;
+    color: #A4A5A7;
+}
+
+.detalis_list .cont{
+    width: 70%;
+    text-align: right;
+    color: #252932;
+}

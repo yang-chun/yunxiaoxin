@@ -25,19 +25,19 @@ class Base extends \app\admin\controller\Base
             session('_mid', $this->_mid);
             $this->miniappInfo = getMimiappInfo($this->_mid);
             session('miniappInfo',$this->miniappInfo);
-            $miniappInfo = Db::name('miniapp')->where('user_id','=', $this->admin_id)
+            $miniappInfo = Db::name('miniapp')->where('admin_id','=', $this->admin_id)
                 ->where('is_use','=','1')
                 ->find();
             if ($miniappInfo['id'] != $this->_mid) {
-                Db::name('miniapp')->where('user_id','=',$this->admin_id)
+                Db::name('miniapp')->where('admin_id','=',$this->admin_id)
                     ->where('id' ,'=', $this->_mid)
                     ->update(['is_use' => '1']);
-                Db::name('miniapp')->where('user_id','=', $this->admin_id)
+                Db::name('miniapp')->where('admin_id','=', $this->admin_id)
                     ->where('id','neq', $this->_mid)
                     ->update(['is_use' => '0']);
             }
         } else {
-            $miniappInfo = Db::name('miniapp')->where('user_id','=', $this->admin_id)
+            $miniappInfo = Db::name('miniapp')->where('admin_id','=', $this->admin_id)
                 ->where('is_use','=', '1')
                 ->find();
             if(!empty($miniappInfo)){

@@ -1,0 +1,10 @@
+.layui-table tr th{
+    text-align: center;
+}
+.layui-table tr td{
+    text-align: center;
+}
+.No_info{
+	text-align: center;
+	color:#666 ;
+}

@@ -34,15 +34,15 @@ class member extends Base
             $model = new MpFriends();
             switch ($do) {
                 case 'friend':
-                    $memberList = $model->memberList(['mpid' => $this->mid], '', 'id DESC', 20);
+                    $memberList = $model->memberList(['mpid' => $this->mpid], '', 'id DESC', 20);
 
                     $this->assign('data', $memberList);
                     break;
                 case 'group':
-                    $list = Db::name('member_group')->where(['mpid'=>$this->mid])->order('level ASC')->select();
+                    $list = Db::name('member_group')->where(['mpid'=>$this->mpid])->order('level ASC')->select();
                     if ($to == 'updateGroup' && input('id')) {
                         $group = Db::name('member_group')->where([
-                            'mpid' => $this->mid,
+                            'mpid' => $this->mpid,
                             'gid' => input('id')
                         ])->find();
                         if (empty($group)) {
@@ -56,11 +56,11 @@ class member extends Base
                     $this->assign('data', $list);
                     break;
                 case 'page':
-                    $this->assign('memberUrl',getHostDomain().url('member/home/index',['mid'=>$this->mid]));
+                    $this->assign('memberUrl',getHostDomain().url('member/home/index',['mid'=>$this->mpid]));
                     break;
                 case 'register':
                     $settingModel=new Setting();
-                    $setting=$settingModel->getSetting(['mpid'=>$this->mid,'name'=>'register','cate'=>'mp']);
+                    $setting=$settingModel->getSetting(['mpid'=>$this->mpid,'name'=>'register','cate'=>'mp']);
                         $data=[
                             'register_type'=>isset($setting['register_type'])?$setting['register_type']:'',
                             'verify'=>isset($setting['verify'])?$setting['verify']:'',
@@ -98,7 +98,7 @@ class member extends Base
                 ajaxMsg(0, $validate->getError());
             }
             $data = input('post.');
-            $data['mpid'] = $this->mid;
+            $data['mpid'] = $this->mpid;
             if (Db::name('member_group')->insert($data)) {
                 ajaxMsg(1, '新增成功');
             } else {
@@ -110,7 +110,7 @@ class member extends Base
     public function delGroup($gid)
     {
         if (Request::isAjax()) {
-            if (Db::name('member_group')->where(['mpid' => $this->mid, 'gid' => $gid])->delete()) {
+            if (Db::name('member_group')->where(['mpid' => $this->mpid, 'gid' => $gid])->delete()) {
                 ajaxMsg(1, '删除成功');
             } else {
                 ajaxMsg(0, '删除失败');
@@ -121,7 +121,7 @@ class member extends Base
     public function updateGroup()
     {
         if (Request::isAjax()) {
-            Db::name('member_group')->where(['mpid' => $this->mid, 'gid' => input('gid')])->update(input('post.'));
+            Db::name('member_group')->where(['mpid' => $this->mpid, 'gid' => input('gid')])->update(input('post.'));
             ajaxMsg(1, '更新成功');
         }
     }
@@ -142,9 +142,9 @@ class member extends Base
                 $ruleModel->where(['type'=>'member'])->delete();
                 $data['url'] = $input['picurl'];
                 $data['keyword']=$input['keyword'];
-                $data['link']=getHostDomain().url('mp/Login/loginByReply',['mid'=>$this->mid]);
+                $data['link']=getHostDomain().url('mp/Login/loginByReply',['mid'=>$this->mpid]);
                 $data['type'] = 'member';
-                $data['mpid'] = $this->mid;
+                $data['mpid'] = $this->mpid;
                 if ($res_1 = $replyMode->allowField(true)->save($data)) {
                     $data['reply_id'] = $replyMode->reply_id;
                     if (!$res_2 = $ruleModel->allowField(true)->save($data)) {
@@ -152,7 +152,7 @@ class member extends Base
                     }
                 }
             }
-            $result = $model->addSetting(['mpid' => $this->mid, 'name' => 'register','cate'=>'mp'], array_merge($input,$data));
+            $result = $model->addSetting(['mpid' => $this->mpid, 'name' => 'register','cate'=>'mp'], array_merge($input,$data));
             if ($result) {
                 ajaxMsg(1, '保存成功');
             } else {

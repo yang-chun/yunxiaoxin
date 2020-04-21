@@ -12,8 +12,9 @@
 namespace think\worker;
 
 use think\App;
+use think\Error;
 use think\exception\HttpException;
-use Workerman\Protocols\Http;
+use Workerman\Protocols\Http as WorkerHttp;
 
 /**
  * Worker应用对象
@@ -39,7 +40,13 @@ class Application extends App
 
             $pathinfo = ltrim(strpos($_SERVER['REQUEST_URI'], '?') ? strstr($_SERVER['REQUEST_URI'], '?', true) : $_SERVER['REQUEST_URI'], '/');
 
-            $this->request->setPathinfo($pathinfo);
+            $this->request
+                ->setPathinfo($pathinfo)
+                ->withInput($GLOBALS['HTTP_RAW_REQUEST_DATA']);
+
+            if ($this->config->get('session.auto_start')) {
+                WorkerHttp::sessionStart();
+            }
 
             // 更新请求对象实例
             $this->route->setRequest($this->request);
@@ -48,32 +55,49 @@ class Application extends App
             $response->send();
             $content = ob_get_clean();
 
+            // Trace调试注入
+            if ($this->env->get('app_trace', $this->config->get('app_trace'))) {
+                $this->debug->inject($response, $content);
+            }
+
             $this->httpResponseCode($response->getCode());
 
             foreach ($response->getHeader() as $name => $val) {
                 // 发送头部信息
-                Http::header($name . (!is_null($val) ? ':' . $val : ''));
+                WorkerHttp::header($name . (!is_null($val) ? ':' . $val : ''));
             }
 
             $connection->send($content);
         } catch (HttpException $e) {
-            $this->exception($connection, $e, 404);
+            $this->exception($connection, $e);
         } catch (\Exception $e) {
-            $this->exception($connection, $e, 500);
+            $this->exception($connection, $e);
         } catch (\Throwable $e) {
-            $this->exception($connection, $e, 500);
+            $this->exception($connection, $e);
         }
     }
 
     protected function httpResponseCode($code = 200)
     {
-        Http::header('HTTP/1.1', true, $code);
+        WorkerHttp::header('HTTP/1.1', true, $code);
     }
 
-    protected function exception($connection, $e, $code)
+    protected function exception($connection, $e)
     {
-        $this->httpResponseCode($code);
-        $connection->send($e->getMessage());
+        if ($e instanceof \Exception) {
+            $handler = Error::getExceptionHandler();
+            $handler->report($e);
+
+            $resp    = $handler->render($e);
+            $content = $resp->getContent();
+            $code    = $resp->getCode();
+
+            $this->httpResponseCode($code);
+            $connection->send($content);
+        } else {
+            $this->httpResponseCode(500);
+            $connection->send($e->getMessage());
+        }
     }
 
 }

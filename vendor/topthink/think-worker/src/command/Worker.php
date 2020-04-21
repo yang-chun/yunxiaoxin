@@ -17,7 +17,8 @@ use think\console\input\Argument;
 use think\console\input\Option;
 use think\console\Output;
 use think\facade\Config;
-use think\worker\Worker as HttpServer;
+use think\facade\Env;
+use think\worker\Http as HttpServer;
 
 /**
  * Worker 命令行类
@@ -29,7 +30,9 @@ class Worker extends Command
     public function configure()
     {
         $this->setName('worker')
-            ->addArgument('action', Argument::OPTIONAL, "start|stop|restart|reload|status", 'start')
+            ->addArgument('action', Argument::OPTIONAL, "start|stop|restart|reload|status|connections", 'start')
+            ->addOption('host', 'H', Option::VALUE_OPTIONAL, 'the host of workerman server.', null)
+            ->addOption('port', 'p', Option::VALUE_OPTIONAL, 'the port of workerman server.', null)
             ->addOption('daemon', 'd', Option::VALUE_NONE, 'Run the workerman server in daemon mode.')
             ->setDescription('Workerman HTTP Server for ThinkPHP');
     }
@@ -38,11 +41,9 @@ class Worker extends Command
     {
         $action = $input->getArgument('action');
 
-        $this->config = Config::pull('worker');
-
         if (DIRECTORY_SEPARATOR !== '\\') {
-            if (!in_array($action, ['start', 'stop', 'reload', 'restart', 'status'])) {
-                $output->writeln("<error>Invalid argument action:{$action}, Expected start|stop|restart|reload|status .</error>");
+            if (!in_array($action, ['start', 'stop', 'reload', 'restart', 'status', 'connections'])) {
+                $output->writeln("<error>Invalid argument action:{$action}, Expected start|stop|restart|reload|status|connections .</error>");
                 return false;
             }
 
@@ -55,31 +56,60 @@ class Worker extends Command
             return false;
         }
 
-        $output->writeln('Starting Workerman http server...');
+        if ('start' == $action) {
+            $output->writeln('Starting Workerman http server...');
+        }
 
-        $host = !empty($this->config['host']) ? $this->config['host'] : '0.0.0.0';
-        $port = !empty($this->config['port']) ? $this->config['port'] : 2346;
+        $this->config = Config::pull('worker');
 
-        if (isset($this->config['context_option'])) {
-            $context = $this->config['context_option'];
-            unset($this->config['context_option']);
+        if (isset($this->config['context'])) {
+            $context = $this->config['context'];
+            unset($this->config['context']);
         } else {
             $context = [];
         }
 
+        $host = $this->getHost();
+        $port = $this->getPort();
+
         $worker = new HttpServer($host, $port, $context);
+
+        if (empty($this->config['pidFile'])) {
+            $this->config['pidFile'] = Env::get('runtime_path') . 'worker.pid';
+        }
+
+        // 避免pid混乱
+        $this->config['pidFile'] .= '_' . $port;
 
         // 设置应用目录
         $worker->setAppPath($this->config['app_path']);
+        unset($this->config['app_path']);
 
         // 开启守护进程模式
         if ($this->input->hasOption('daemon')) {
             $worker->setStaticOption('daemonize', true);
         }
 
+        // 开启HTTPS访问
         if (!empty($this->config['ssl'])) {
             $this->config['transport'] = 'ssl';
             unset($this->config['ssl']);
+        }
+
+        // 设置网站目录
+        if (empty($this->config['root'])) {
+            $this->config['root'] = Env::get('root_path') . 'public';
+        }
+
+        $worker->setRoot($this->config['root']);
+        unset($this->config['root']);
+
+        // 设置文件监控
+        if (DIRECTORY_SEPARATOR !== '\\' && (Env::get('app_debug') || !empty($this->config['file_monitor']))) {
+            $interval = isset($this->config['file_monitor_interval']) ? $this->config['file_monitor_interval'] : 2;
+            $paths    = isset($this->config['file_monitor_path']) ? $this->config['file_monitor_path'] : [];
+            $worker->setMonitor($interval, $paths);
+            unset($this->config['file_monitor'], $this->config['file_monitor_interval'], $this->config['file_monitor_path']);
         }
 
         // 全局静态属性设置
@@ -94,11 +124,31 @@ class Worker extends Command
         $worker->option($this->config);
 
         if (DIRECTORY_SEPARATOR == '\\') {
-            $output->writeln("Workerman http server started: <http://{$host}:{$port}>");
             $output->writeln('You can exit with <info>`CTRL-C`</info>');
         }
 
         $worker->start();
     }
 
+    protected function getHost($default = '0.0.0.0')
+    {
+        if ($this->input->hasOption('host')) {
+            $host = $this->input->getOption('host');
+        } else {
+            $host = !empty($this->config['host']) ? $this->config['host'] : $default;
+        }
+
+        return $host;
+    }
+
+    protected function getPort($default = '2346')
+    {
+        if ($this->input->hasOption('port')) {
+            $port = $this->input->getOption('port');
+        } else {
+            $port = !empty($this->config['port']) ? $this->config['port'] : $default;
+        }
+
+        return $port;
+    }
 }

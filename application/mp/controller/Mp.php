@@ -40,7 +40,7 @@ class Mp extends Base
     {
         $this->getAppStore();
         $model = new MpFriends();
-        $result = $model->getFriendReport($this->mid);
+        $result = $model->getFriendReport($this->mpid);
         $this->assign('report', $result);
         return view();
     }
@@ -64,7 +64,7 @@ class Mp extends Base
             case 'addon':
                 $ruleModel = new MpRule();
                 $data = $ruleModel->alias('r')
-                    ->where(['r.mpid' => $this->mid, 'r.type' => 'addon'])
+                    ->where(['r.mpid' => $this->mpid, 'r.type' => 'addon'])
                     ->join('__ADDONS__ a', 'a.addon=r.addon')->field('r.keyword,r.id,r.mpid,r.addon,r.type,r.status,a.name,a.desc,a.logo')
                     ->select();
                 $this->assign('data', $data);
@@ -97,7 +97,7 @@ class Mp extends Base
         if (input('keyword')) {
             if (input('search_type') == 1) {
                 $result = Db::name('mp_rule')->alias('r')
-                    ->where(['r.mpid' => $this->mid])
+                    ->where(['r.mpid' => $this->mpid])
                     ->where('r.type', 'neq', '')
                     ->where('r.keyword', 'like', '%' . input('keyword') . '%')
                     ->order('r.id DESC')
@@ -106,7 +106,7 @@ class Mp extends Base
                 $this->assign('type', 'search');
             } else {
                 $result = Db::name('mp_rule')->alias('r')
-                    ->where(['r.mpid' => $this->mid, 'r.type' => $type])
+                    ->where(['r.mpid' => $this->mpid, 'r.type' => $type])
                     ->where('r.keyword', 'like', '%' . input('keyword') . '%')
                     ->join('__MP_REPLY__ p', 'p.reply_id=r.reply_id')
                     ->order('r.id DESC')
@@ -122,7 +122,7 @@ class Mp extends Base
     public function getRepayList($type)
     {
         $rePly = Db::name('mp_rule')->alias('r')
-            ->where(['r.mpid' => $this->mid, 'r.type' => $type])
+            ->where(['r.mpid' => $this->mpid, 'r.type' => $type])
             ->join('__MP_REPLY__ p', 'p.reply_id=r.reply_id')
             ->order('r.id DESC')
             ->paginate(10);
@@ -143,7 +143,7 @@ class Mp extends Base
             if (!isset($input['status'])) {
                 $input['status'] = '0';
             }
-            $data['mpid'] = $this->mid;
+            $data['mpid'] = $this->mpid;
             $data['keyword'] = trim($input['keyword']);
             $data['status'] = $input['status'];
 
@@ -180,7 +180,7 @@ class Mp extends Base
                         ajaxMsg(0, $validate->getError());
                     }
                     $material = [
-                        'mpid' => $this->mid,
+                        'mpid' => $this->mpid,
                         'content' => $data['content']
                     ];
                     $this->material($input['type'], $material);
@@ -283,7 +283,7 @@ class Mp extends Base
                     } else {//认为选择了永久或者暂时音频
                         if (isset($filePath[0])) {
                             $materialModel = new \app\common\model\Material();
-                            $materialArray = $materialModel->getMaterialByFind(['media_id' => $filePath[0], 'mpid' => $this->mid]);
+                            $materialArray = $materialModel->getMaterialByFind(['media_id' => $filePath[0], 'mpid' => $this->mpid]);
                             if ($materialArray['from_type'] == 0) {//临时
                                 if (empty($materialArray['url'])) ajaxMsg('0', '失败！资源地址为空');
                                 $filePath = explode(getHostDomain(), $materialArray['url']);
@@ -307,7 +307,7 @@ class Mp extends Base
                     $data['status_type'] = $input['voice_staus_type'];
                     $data['media_id'] = $media['media_id'];
                     $material = [
-                        'mpid' => $this->mid,
+                        'mpid' => $this->mpid,
                         'title' => $data['title'],
                         'url' => $data['url'],
                         'media_id' => $data['media_id']
@@ -340,7 +340,7 @@ class Mp extends Base
                     if ($result === false) {
                         ajaxMsg(0, $validate->getError());
                     }
-                    $sting = getSetting($this->mid, 'cloud');
+                    $sting = getSetting($this->mpid, 'cloud');
                     if (isset($sting['qiniu']['status']) && $sting['qiniu']['status'] == 1) {
                         $ext = strrchr($input['reply_image'], '.');
                         $fileName_h = md5(rand_string(12)) . $ext;
@@ -368,7 +368,7 @@ class Mp extends Base
                         }
                     } else {
                         //认为永久、类型永久或者临时请忽略
-                        $materialArray = $materialModel->getMaterialByFind(['url' => $input['reply_image'], 'mpid' => $this->mid]);
+                        $materialArray = $materialModel->getMaterialByFind(['url' => $input['reply_image'], 'mpid' => $this->mpid]);
                         $media['media_id'] = $materialArray['media_id'];
 
                     }
@@ -377,7 +377,7 @@ class Mp extends Base
                     $data['media_id'] = $media['media_id'];
                     $data['status_type'] = $input['image_staus_type'];
                     $material = [
-                        'mpid' => $this->mid,
+                        'mpid' => $this->mpid,
                         'url' => $data['url'],
                         'media_id' => $data['media_id']
                     ];
@@ -423,7 +423,7 @@ class Mp extends Base
                     } else {//认为选择了永久或者暂时音频
                         if (isset($filePath[0])) {
                             $materialModel = new \app\common\model\Material();
-                            $materialArray = $materialModel->getMaterialByFind(['media_id' => $filePath[0], 'mpid' => $this->mid]);
+                            $materialArray = $materialModel->getMaterialByFind(['media_id' => $filePath[0], 'mpid' => $this->mpid]);
                             if ($materialArray['from_type'] == 0) {//临时
                                 if (empty($materialArray['url'])) ajaxMsg('0', '失败！资源地址为空');
                                 $filePath = explode(getHostDomain(), $materialArray['url']);
@@ -448,7 +448,7 @@ class Mp extends Base
                     $data['status_type'] = $input['video_staus_type'];
                     $data['media_id'] = $media['media_id'];
                     $material = [
-                        'mpid' => $this->mid,
+                        'mpid' => $this->mpid,
                         'title' => $data['title'],
                         'content' => $data['content'],
                         'url' => $data['url'],
@@ -488,7 +488,7 @@ class Mp extends Base
                     $data['type'] = 'music';
                     $data['content'] = $input['music_content'];
                     $material = [
-                        'mpid' => $this->mid,
+                        'mpid' => $this->mpid,
                         'title' => $data['title'],
                         'content' => $data['content'],
                         'url' => $data['url'],
@@ -525,7 +525,7 @@ class Mp extends Base
         $id = input('get.id');
         $post = input('post.');
         $rePly = Db::name('mp_rule')->alias('r')
-            ->where(['r.mpid' => $this->mid, 'r.id' => $id])
+            ->where(['r.mpid' => $this->mpid, 'r.id' => $id])
             ->join('__MP_REPLY__ p', 'p.reply_id=r.reply_id', 'left')
             ->field('r.*,p.reply_id,p.title,p.content,p.url,p.link,p.status_type,p.media_id')
             ->find();
@@ -548,7 +548,7 @@ class Mp extends Base
             }
             $status = isset($post['status']) ? 1 : 0;
             $data['status'] = $status;
-            MpRule::update(['keyword' => trim($post['keyword']), 'status' => $status], ['mpid' => $this->mid, 'id' => $id]);
+            MpRule::update(['keyword' => trim($post['keyword']), 'status' => $status], ['mpid' => $this->mpid, 'id' => $id]);
             switch ($rePly['type']) {
                 case 'text':
                     MpReply::update(['content' => $post['content'], 'status' => $status], ['reply_id' => $rePly['reply_id']]);
@@ -592,7 +592,7 @@ class Mp extends Base
                         ajaxMsg(0, $validate->getError());
                     }
                     $data['addon'] = $post['addons'];
-                    MpRule::update(['addon' => $post['addons']], ['mpid' => $this->mid, 'id' => $id]);
+                    MpRule::update(['addon' => $post['addons']], ['mpid' => $this->mpid, 'id' => $id]);
                     ajaxMsg(1, '修改成功');
                     break;
                 case 'voice':
@@ -627,7 +627,7 @@ class Mp extends Base
                         } else {//认为选择了永久或者暂时音频
                             if (isset($filePath[0])) {
                                 $materialModel = new \app\common\model\Material();
-                                $materialArray = $materialModel->getMaterialByFind(['media_id' => $filePath[0], 'mpid' => $this->mid]);
+                                $materialArray = $materialModel->getMaterialByFind(['media_id' => $filePath[0], 'mpid' => $this->mpid]);
                                 if ($materialArray['from_type'] == 0) {//临时
                                     if (empty($materialArray['url'])) ajaxMsg('0', '失败！资源地址为空');
                                     $filePath = explode(getHostDomain(), $materialArray['url']);
@@ -647,7 +647,7 @@ class Mp extends Base
                         }
                         $data['media_id'] = $media['media_id'];
                         $material = [
-                            'mpid' => $this->mid,
+                            'mpid' => $this->mpid,
                             'title' => $post['voice_title'],
                             'url' => $post['voice'],
                             'media_id' => $data['media_id']
@@ -677,7 +677,7 @@ class Mp extends Base
                         ajaxMsg(0, $validate->getError());
                     }
                     if ($rePly['url'] != $input['reply_image'] || $rePly['status_type'] != $post['image_staus_type']) {
-                        $sting = getSetting($this->mid, 'cloud');
+                        $sting = getSetting($this->mpid, 'cloud');
                         if (isset($sting['qiniu']['status']) && $sting['qiniu']['status'] == 1) {
                             $ext = strrchr($input['reply_image'], '.');
                             $fileName_h = md5(rand_string(12)) . $ext;
@@ -705,7 +705,7 @@ class Mp extends Base
                             }
                         } else {
                             //认为永久、类型永久或者临时请忽略
-                            $materialArray = $materialModel->getMaterialByFind(['url' => $input['reply_image'], 'mpid' => $this->mid]);
+                            $materialArray = $materialModel->getMaterialByFind(['url' => $input['reply_image'], 'mpid' => $this->mpid]);
                             $media['media_id'] = $materialArray['media_id'];
 
                         }
@@ -714,7 +714,7 @@ class Mp extends Base
                         $data['media_id'] = $media['media_id'];
                         $data['status_type'] = $input['image_staus_type'];
                         $material = [
-                            'mpid' => $this->mid,
+                            'mpid' => $this->mpid,
                             'url' => $data['url'],
                             'media_id' => $data['media_id']
                         ];
@@ -754,7 +754,7 @@ class Mp extends Base
                         } else {//认为选择了永久或者暂时音频
                             if (isset($filePath[0])) {
                                 $materialModel = new \app\common\model\Material();
-                                $materialArray = $materialModel->getMaterialByFind(['media_id' => $filePath[0], 'mpid' => $this->mid]);
+                                $materialArray = $materialModel->getMaterialByFind(['media_id' => $filePath[0], 'mpid' => $this->mpid]);
                                 if ($materialArray['from_type'] == 0) {//临时
                                     if (empty($materialArray['url'])) ajaxMsg('0', '失败！资源地址为空');
                                     $filePath = explode(getHostDomain(), $materialArray['url']);
@@ -777,7 +777,7 @@ class Mp extends Base
                         $data['status_type'] = $input['video_staus_type'];
                         $data['media_id'] = $media['media_id'];
                         $material = [
-                            'mpid' => $this->mid,
+                            'mpid' => $this->mpid,
                             'title' => $input['video_title'],
                             'content' => $input['video_content'],
                             'url' => $data['url'],
@@ -812,7 +812,7 @@ class Mp extends Base
                     $data['type'] = 'music';
                     $data['content'] = $input['music_content'];
                     $material = [
-                        'mpid' => $this->mid,
+                        'mpid' => $this->mpid,
                         'title' => $data['title'],
                         'content' => $data['content'],
                         'url' => $data['url'],
@@ -838,7 +838,7 @@ class Mp extends Base
     {
         $where = [
             'id' => $id,
-            'mpid' => $this->mid
+            'mpid' => $this->mpid
         ];
         $model = new MpRule();
         if ($model->delRule($where)) {
@@ -851,7 +851,7 @@ class Mp extends Base
     public function updateRule($id = '', $status = '')
     {
         $model = new MpRule();
-        $model->save(['status' => $status], ['id' => $id, 'mpid' => $this->mid]);
+        $model->save(['status' => $status], ['id' => $id, 'mpid' => $this->mpid]);
         ajaxMsg(1, '改变状态成功');
     }
 
@@ -931,7 +931,7 @@ class Mp extends Base
             foreach ($where as $key => $v) {
                 $result = Db::name('mp_rule')
                     ->where('event', 'eq', $v)
-                    ->where(['mpid' => $this->mid])
+                    ->where(['mpid' => $this->mpid])
                     ->field('addon,keyword,event')->find();
                 if (empty($result)) {
                     $arr = [
@@ -955,15 +955,15 @@ class Mp extends Base
     {
         switch ($data[$type]) {
             case 'nocol':
-                Db::name('mp_rule')->where(['mpid' => $this->mid, 'event' => $type])->delete();
+                Db::name('mp_rule')->where(['mpid' => $this->mpid, 'event' => $type])->delete();
                 break;
             case 'keyword':
                 $key = $type . '_keyword';
                 if ($data[$key]) {
-                    if (Db::name('mp_rule')->where(['mpid' => $this->mid, 'event' => $type])->find()) {
-                        Db::name('mp_rule')->where(['mpid' => $this->mid, 'event' => $type])->update(['keyword' => $data[$key], 'addon' => null]);
+                    if (Db::name('mp_rule')->where(['mpid' => $this->mpid, 'event' => $type])->find()) {
+                        Db::name('mp_rule')->where(['mpid' => $this->mpid, 'event' => $type])->update(['keyword' => $data[$key], 'addon' => null]);
                     } else {
-                        Db::name('mp_rule')->insert(['mpid' => $this->mid, 'event' => $type, 'keyword' => $data[$key]]);
+                        Db::name('mp_rule')->insert(['mpid' => $this->mpid, 'event' => $type, 'keyword' => $data[$key]]);
                     }
                 } else {
                     ajaxMsg('0', '表单中存在关键词没有填写');
@@ -972,10 +972,10 @@ class Mp extends Base
             case 'addon':
                 $key = $type . '_addons';
                 if ($data[$key]) {
-                    if (Db::name('mp_rule')->where(['mpid' => $this->mid, 'event' => $type])->find()) {
-                        Db::name('mp_rule')->where(['mpid' => $this->mid, 'event' => $type])->update(['addon' => $data[$key], 'keyword' => null]);
+                    if (Db::name('mp_rule')->where(['mpid' => $this->mpid, 'event' => $type])->find()) {
+                        Db::name('mp_rule')->where(['mpid' => $this->mpid, 'event' => $type])->update(['addon' => $data[$key], 'keyword' => null]);
                     } else {
-                        Db::name('mp_rule')->insert(['mpid' => $this->mid, 'event' => $type, 'addon' => $data[$key]]);
+                        Db::name('mp_rule')->insert(['mpid' => $this->mpid, 'event' => $type, 'addon' => $data[$key]]);
                     }
                 } else {
                     ajaxMsg('0', '表单中存在应用没有选择');
@@ -1020,7 +1020,7 @@ class Mp extends Base
     {
         deleteMpMenu();
         Db::name('mp_menu')
-            ->where(['mp_id' => $this->mid,])
+            ->where(['mp_id' => $this->mpid,])
             ->delete();
 
     }
@@ -1040,14 +1040,14 @@ class Mp extends Base
                 ajaxMsg(1, '保存成功');
             }
             Db::name('mp_menu')
-                ->where(['mp_id' => $this->mid,])
+                ->where(['mp_id' => $this->mpid,])
                 ->delete();
 
             foreach ($data as $key => $vo) {
                 if (isset($vo['content'])) {
                     $data[$key]['content'] = str_replace('"', "'", $vo['content']);
                 }
-                $data[$key]['mp_id'] = $this->mid;
+                $data[$key]['mp_id'] = $this->mpid;
             }
             $_S = false;
             foreach ($data as $key => $val) {
@@ -1057,7 +1057,7 @@ class Mp extends Base
                 $result = Db::name('mp_menu')
                     ->field('id,index,pindex,name,type,content')
                     ->where('status', '1')
-                    ->where('mp_id', $this->mid)
+                    ->where('mp_id', $this->mpid)
                     ->order('sort ASC,id ASC')
                     ->select();
                 $menu_type = [
@@ -1131,9 +1131,9 @@ class Mp extends Base
     {
         if (Request::isPost()) {
             $input = input('post.');
-            Db::name('setting')->where(['name' => $input['setting_name'], 'mpid' => $this->mid, 'cate' => 'mp'])->delete();
+            Db::name('setting')->where(['name' => $input['setting_name'], 'mpid' => $this->mpid, 'cate' => 'mp'])->delete();
             $data['name'] = $input['setting_name'];
-            $data['mpid'] = $this->mid;
+            $data['mpid'] = $this->mpid;
             $data['cate'] = 'mp';
             $data['value'] = json_encode($input);
             if (Db::name('setting')->insert($data)) {
@@ -1142,7 +1142,7 @@ class Mp extends Base
                 ajaxMsg('0', '配置失败了');
             }
         } else {
-            $result = Db::name('setting')->where(['name' => $type, 'mpid' => $this->mid, 'cate' => 'mp'])->find();
+            $result = Db::name('setting')->where(['name' => $type, 'mpid' => $this->mpid, 'cate' => 'mp'])->find();
             switch ($type) {
                 case 'wxpay':
                     $arr1 = [
@@ -1220,15 +1220,15 @@ class Mp extends Base
         } else {
             $qrModel = $qrModel = new Qrcode();
             if ($type == 'list') {
-                $data = $qrModel->where(['mpid' => $this->mid])->order('id DESC')->paginate(10);
+                $data = $qrModel->where(['mpid' => $this->mpid])->order('id DESC')->paginate(10);
                 $this->assign('data', $data);
             }
             if ($type == 'statistics') {
-                $data = $qrModel->where(['mpid' => $this->mid])->order('id DESC')->paginate(10);
+                $data = $qrModel->where(['mpid' => $this->mpid])->order('id DESC')->paginate(10);
                 $this->assign('data', $data);
             }
             if ($type == 'friend') {
-                $data = Db::name('qrcode_data')->alias('a')->where(['a.scene_id' => input('scene_id'), 'a.mpid' => $this->mid, 'a.type' => '1'])
+                $data = Db::name('qrcode_data')->alias('a')->where(['a.scene_id' => input('scene_id'), 'a.mpid' => $this->mpid, 'a.type' => '1'])
                     ->join('__MP_FRIENDS__ b', 'a.openid=b.openid')
                     ->order('a.create_time DESC')
                     ->field('a.*,b.nickname,b.headimgurl')
@@ -1250,10 +1250,10 @@ class Mp extends Base
         if (Request::isPost()) {
             $qrModel = new Qrcode();
             $IN = input();
-            if ($qrModel->where(['scene_name' => $IN['name'], 'mpid' => $this->mid])->find()) {
+            if ($qrModel->where(['scene_name' => $IN['name'], 'mpid' => $this->mpid])->find()) {
                 ajaxMsg('0', '场景名称已经存在');
             }
-            $data['mpid'] = $this->mid;
+            $data['mpid'] = $this->mpid;
             $data['keyword'] = $IN['keyword'];
             $data['scene_name'] = $IN['name'];
             $data['qr_type'] = $IN['qr_type'];
@@ -1348,12 +1348,12 @@ class Mp extends Base
     {
 //       $lists=Db::name('media_news')
 //           ->alias('a')
-//           ->where(['a.mid'=>$this->mid,'a.type'=>$type])
+//           ->where(['a.mid'=>$this->mpid,'a.type'=>$type])
 //           ->join('__MEDIA_NEWS_LIST__ b','a.news_id=b.news_id','RIGHT')
 //           ->select();
         $url = getHostDomain() . $_SERVER['REQUEST_URI'];
         \session('news_list_url', $url);
-        $lists = Db::name('media_news')->where([['mid', '=', $this->mid], ['type', '=', $type]])
+        $lists = Db::name('media_news')->where([['mid', '=', $this->mpid], ['type', '=', $type]])
             ->order('news_id DESC')
             ->paginate(6);
         $page = $lists->render();
@@ -1403,7 +1403,7 @@ class Mp extends Base
                 ajaxMsg(3, '请检查必填项');
             }
             $model = new MediaNewsList();
-            $info['mid'] = $this->mid;
+            $info['mid'] = $this->mpid;
             $info['title'] = $In['title'];
             $info['type'] = $In['type'];
             $info['create_time'] = time();
@@ -1414,7 +1414,7 @@ class Mp extends Base
             switch ($In['type']) {
                 case 1:
                     if (!$model->save(['news_id' => $news_id, 'content' => $In['title']])) {
-                        Db::name('media_news')->where(['mid' => $this->mid, 'news_id' => $news_id])->delete();
+                        Db::name('media_news')->where(['mid' => $this->mpid, 'news_id' => $news_id])->delete();
                         ajaxMsg(0, '操作失败了');
                     }
                     break;
@@ -1429,7 +1429,7 @@ class Mp extends Base
                     $news_lists['content_source_url'] = $array[6];
                     $news_lists['news_id'] = $news_id;
                     if (!$model->save($news_lists)) {
-                        Db::name('media_news')->where(['mid' => $this->mid, 'news_id' => $news_id])->delete();
+                        Db::name('media_news')->where(['mid' => $this->mpid, 'news_id' => $news_id])->delete();
                         ajaxMsg(0, '操作失败了');
                     }
                     break;
@@ -1448,7 +1448,7 @@ class Mp extends Base
                         $news_lists['news_id'] = $news_id;
                         $model = new MediaNewsList();
                         if (!$model->save($news_lists)) {
-                            Db::name('media_news')->where(['mid' => $this->mid, 'news_id' => $news_id])->delete();
+                            Db::name('media_news')->where(['mid' => $this->mpid, 'news_id' => $news_id])->delete();
                             ajaxMsg(0, '增加图文第' . ($k + 1) . '失败了');
                         }
                     }
@@ -1472,7 +1472,7 @@ class Mp extends Base
     public function uploadMediaNews()
     {
         if (Request::isAjax()) {
-            $mp = getMpInfo($this->mid);
+            $mp = getMpInfo($this->mpid);
             if ($mp['type'] == 1 || $mp['type'] == 3) {
                 ajaxMsg(0, '此功能认证公众号才能使用');
             }
@@ -1482,7 +1482,7 @@ class Mp extends Base
             if (empty($lists))
                 ajaxMsg('0', '没有内容可上传');
             $array = [];
-            $news = Db::name('media_news')->where(['mid' => $this->mid, 'news_id' => $news_id])->find();
+            $news = Db::name('media_news')->where(['mid' => $this->mpid, 'news_id' => $news_id])->find();
             if ($news['type'] != 1) {
                 foreach ($lists as $key => $val) {
                     $F = explode(getHostDomain(), $val['cover']);
@@ -1508,7 +1508,7 @@ class Mp extends Base
             } else {
                 ajaxMsg(0, '文本类型不需要上传，直接可预览或者群发');
             }
-            $wxObj = getWechatActiveObj($this->mid);
+            $wxObj = getWechatActiveObj($this->mpid);
             if ($result = $wxObj->uploadArticles($articleList)) {
                 if (Db::name('media_news')->where('news_id', $news_id)->update(['media_id' => $result['media_id'], 'status_type' => 1])) {
                     ajaxMsg(1, '上传至微信成功');
@@ -1535,13 +1535,13 @@ class Mp extends Base
     public function newsPreview()
     {
         if (Request::isAjax()) {
-            $mp = getMpInfo($this->mid);
+            $mp = getMpInfo($this->mpid);
             if ($mp['type'] == 1 || $mp['type'] == 3) {
                 ajaxMsg(0, '此功能认证公众号才能使用');
             }
             $news_id = Request::post('news_id');
             $wxid = Request::post('wxid');
-            $news = Db::name('media_news')->where(['mid' => $this->mid, 'news_id' => $news_id])->find();
+            $news = Db::name('media_news')->where(['mid' => $this->mpid, 'news_id' => $news_id])->find();
             if (empty($news)) {
                 ajaxMsg(0, '内容不存在');
             }
@@ -1569,7 +1569,7 @@ class Mp extends Base
                 ];
             }
 
-            $wxObj = getWechatActiveObj($this->mid);
+            $wxObj = getWechatActiveObj($this->mpid);
             $result = $wxObj->previewMassMessage($data);
             if ($result && isset($result['errcode']) && $result['errcode'] == 0) {
                 ajaxMsg(1, '发送成功，请打开发送者微信进行预览');
@@ -1598,7 +1598,7 @@ class Mp extends Base
             $this->error('没有相应的内容');
         }
         $result = Db::name('media_news')->where(['news_id' => $news_id])->find();
-        if ($result['mid'] != $this->mid) {
+        if ($result['mid'] != $this->mpid) {
             $this->error('修改内容不存在或者与公众号不匹配');
         }
         if (Request::isAjax()) {
@@ -1613,7 +1613,7 @@ class Mp extends Base
             switch ($type) {
                 case 1:
                     $res = Db::name('media_news')
-                        ->where(['mid' => $this->mid, 'news_id' => $news_id])
+                        ->where(['mid' => $this->mpid, 'news_id' => $news_id])
                         ->update(['title' => $In['title'], 'update_time' => time()]);
                     if ($res) {
                         $model->save(['content' => $In['title']], ['news_id' => $news_id]);
@@ -1633,14 +1633,14 @@ class Mp extends Base
                     $data['content_source_url'] = $array[6];
                     if ($model->save($data, ['news_id' => $news_id])) {
                         Db::name('media_news')
-                            ->where(['mid' => $this->mid, 'news_id' => $news_id])
+                            ->where(['mid' => $this->mpid, 'news_id' => $news_id])
                             ->update(['title' => $In['title'], 'update_time' => time(), 'status_type' => 0]);
                     }
                     ajaxMsg(1, '修改成功');
                     break;
                 case 3:
                     $res = Db::name('media_news')
-                        ->where(['mid' => $this->mid, 'news_id' => $news_id])
+                        ->where(['mid' => $this->mpid, 'news_id' => $news_id])
                         ->update(['title' => $In['title'], 'update_time' => time(), 'status_type' => 0]);
                     if (!$res) {
                         ajaxMsg(0, '更新状态失败');
@@ -1668,7 +1668,7 @@ class Mp extends Base
                     break;
             }
         } else {
-            $newsInfo = Db::name('media_news')->where(['mid' => $this->mid, 'type' => $type, 'news_id' => $news_id])->find();
+            $newsInfo = Db::name('media_news')->where(['mid' => $this->mpid, 'type' => $type, 'news_id' => $news_id])->find();
 
             $model = new MediaNewsList();
             $newsInfos = $model->where('news_id', '=', $news_id)
@@ -1724,10 +1724,10 @@ class Mp extends Base
         if (Request::isAjax()) {
             if ($news_id = Request::post('id')) {
                 $result = Db::name('media_news')->where(['news_id' => $news_id])->find();
-                if ($result['mid'] != $this->mid) {
+                if ($result['mid'] != $this->mpid) {
                     ajaxMsg(0, '删除失败，内容与公众号不吻合');
                 }
-                Db::name('media_news')->where(['mid' => $this->mid, 'news_id' => $news_id])->delete();
+                Db::name('media_news')->where(['mid' => $this->mpid, 'news_id' => $news_id])->delete();
                 Db::name('media_news_list')->where(['news_id' => $news_id])->delete();
                 ajaxMsg(1, '删除成功');
             }
@@ -1738,12 +1738,12 @@ class Mp extends Base
     public function sendall()
     {
         if (Request::isAjax()) {
-            $mp = getMpInfo($this->mid);
+            $mp = getMpInfo($this->mpid);
             if ($mp['type'] == 1 || $mp['type'] == 3) {
                 ajaxMsg(0, '此功能认证公众号才能使用');
             }
             $news_id = Request::post('news_id');
-            $news = Db::name('media_news')->where(['mid' => $this->mid, 'news_id' => $news_id])->find();
+            $news = Db::name('media_news')->where(['mid' => $this->mpid, 'news_id' => $news_id])->find();
             if (empty($news)) {
                 ajaxMsg(0, '内容不存在');
             }
@@ -1776,10 +1776,10 @@ class Mp extends Base
                     'send_ignore_reprint' => 0
                 ];
             }
-            $wxObj = getWechatActiveObj($this->mid);
+            $wxObj = getWechatActiveObj($this->mpid);
             $result = $wxObj->sendGroupMassMessage($data);
             if ($result && isset($result['errcode']) && $result['errcode'] == 0) {
-                Db::name('media_news')->where(['mid' => $this->mid, 'news_id' => $news_id])
+                Db::name('media_news')->where(['mid' => $this->mpid, 'news_id' => $news_id])
                     ->update(['status_type'=>3]);
                 ajaxMsg(1, '群发成功');
             } else {
@@ -1795,11 +1795,11 @@ class Mp extends Base
             $info = $file->rule('md5')->validate(['ext' => 'jpg,png'])->move(ROOT_PATH . DS . ENTR_PATH . DS . 'uploads');
             if ($info) {
                 $imgFile = '@' . ROOT_PATH . DS . ENTR_PATH . DS . 'uploads' . DS . $info->getSaveName();
-                $wxObj = getWechatActiveObj($this->mid);
+                $wxObj = getWechatActiveObj($this->mpid);
                 $result = $wxObj->uploadImg(['media' => $imgFile]);
                 if ($result && isset($result['url']) && !empty($result['url'])) {
                     $data = [
-                        'mid' => $this->mid,
+                        'mid' => $this->mpid,
                         'url' => $result['url'],
                         'create_time' => time(),
                         'type' => 1,
@@ -1845,7 +1845,7 @@ class Mp extends Base
     {
         $in = input();
         $model = new MediaNewsMaterial();
-        $mediaLists = $model->where('mid', $this->mid)
+        $mediaLists = $model->where('mid', $this->mpid)
             ->where('type', 1)
             ->order('id DESC')
             ->limit($in['start'], $in['size'])->select();

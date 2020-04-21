@@ -19,7 +19,7 @@ class Message extends Base
 
     public function messageList($status=0){
         $model =new MpMsg();
-        $result=$model->messageListByGroup($this->mid,$status);
+        $result=$model->messageListByGroup($this->mpid,$status);
         $this->assign('msgList',$result);
         $this->assign('status',$status);
         return view('messagelist');
@@ -49,9 +49,9 @@ class Message extends Base
            }else{
                $model =new MpMsg();
                $model->save(['status'=>1],['openid'=>$openid]);
-              // $mpInfo=getMpInfo($this->mid);
+              // $mpInfo=getMpInfo($this->mpid);
                $msg['openid']=$openid;
-               $msg['mpid']=$this->mid;
+               $msg['mpid']=$this->mpid;
                $msg['create_time']=time();
                $msg['type']='text';
                $msg['content']=$msg_content;
@@ -62,7 +62,7 @@ class Message extends Base
            }
         }else{
             $model =new MpMsg();
-            $msgLists=$model->getFriendMsgList($openid,$this->mid);
+            $msgLists=$model->getFriendMsgList($openid,$this->mpid);
             $this->assign('openid',$openid);
             $this->assign('msgList',$msgLists);
             return view('replymsg');
@@ -74,7 +74,7 @@ class Message extends Base
     public function delMsg($id,$openid){
         if(Request::isAjax()){
             $model =new MpMsg();
-            if($model->where(['msg_id'=>$id,'openid'=>$openid,'mpid'=>$this->mid])->delete()){
+            if($model->where(['msg_id'=>$id,'openid'=>$openid,'mpid'=>$this->mpid])->delete()){
                 ajaxMsg(1,'操作成功');
             } else{
                 ajaxMsg(0,'操作失败');
@@ -101,9 +101,9 @@ class Message extends Base
                 if(isset($result['errcode']) && $result['errcode']=='0' && isset($result['errmsg']) && $result['errmsg']=='ok'){
                     $model =new MpMsg();
                     $model->save(['status'=>1],['openid'=>$openid]);
-                    // $mpInfo=getMpInfo($this->mid);
+                    // $mpInfo=getMpInfo($this->mpid);
                     $msg['openid']=$openid;
-                    $msg['mpid']=$this->mid;
+                    $msg['mpid']=$this->mpid;
                     $msg['create_time']=time();
                     $msg['type']='image';
                     $msg['content']=getHostDomain().$imgPath;
@@ -131,7 +131,7 @@ class Message extends Base
 
     public function getMsgStatusTotal($openid=''){
        $model= new MpMsg();
-       $result=$model->getMsgTotal($openid,$this->mid);
+       $result=$model->getMsgTotal($openid,$this->mpid);
        ajaxReturn(['msgTotal'=>$result],1);
     }
 

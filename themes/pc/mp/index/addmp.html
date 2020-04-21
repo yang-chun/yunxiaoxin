@@ -83,6 +83,7 @@
 <script>
     layui.use('form', function () {
         var form = layui.form;
+        console.log(form)
         form.on('submit(sbm)', function (data) {
             $.post('',data.field,function (res) {
                 if(res.status=='1'){

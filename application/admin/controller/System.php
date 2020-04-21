@@ -30,7 +30,7 @@ class System extends Base
 
     public function index()
     {
-        $this->redirect('mp/index/mplist');
+        $this->redirect('mp/index/index');
         return view();
     }
 
@@ -100,69 +100,6 @@ class System extends Base
         }
     }
 
-    public function AdminMember()
-    {
-        $admin = Db::name('admin')->where('admin_id', 'eq', $this->admin_id)->select();
-        $this->assign('adminList', $admin);
-        return view('adminmember');
-    }
-
-    public function addAdminMember()
-    {
-        if (Request::isAjax()) {
-            $_data = input();
-            if ($_data['password'] != $_data['repassword']) {
-                ajaxMsg(0, '两次密码不匹配');
-            }
-            $S = getAdmin();
-            if ($S['id'] != $this->admin_id) {
-                ajaxMsg('0', '你无权操作');
-            }
-            if (!$result = Db::name('admin')->where('admin_name', 'eq', $_data['admin_name'])
-                ->find()) {
-
-                $rand_str = rand_string();
-                $password = md5($_data['password'] . $rand_str);
-                $data['admin_name'] = $_data['admin_name'];
-                $data['password'] = $password;
-                $data['rand_str'] = $rand_str;
-                $data['admin_id'] = $this->admin_id;
-                if (Db::name('admin')->insert($data)) {
-                    ajaxMsg(1, '操作成功');
-                } else {
-                    ajaxMsg(0, '操作失败');
-                }
-            } else {
-                ajaxMsg(0, '登录账户已经存在');
-            }
-        } else {
-            return view('addadminmember');
-        }
-
-    }
-
-    public function disabledAdmin($id, $status = '')
-    {
-        if ($result = Db::name('admin')->where('id', 'eq', $id)->find()) {
-            if ($result['admin_id'] == $id) {
-                ajaxMsg('0', '不能禁用超级管理员');
-            }
-            if ($result['admin_id'] != $this->admin_id) {
-                ajaxMsg('0', '你无权操作');//禁用成员不属于当前管理员
-            }
-//            if ($result['id'] != $this->admin_id) {
-//                ajaxMsg('0', '你无权操作1');//禁用成员不属于当前管理员
-//            }
-        }
-        if (Db::name('admin')->where(['id' => $id, 'admin_id' => $this->admin_id])->update(['status' => $status])) {
-            Cache::rm('ststemAdmin');
-            ajaxMsg(1, '操作成功');
-        } else {
-            ajaxMsg(0, '操作失败');
-        }
-
-    }
-
     public function updatePwd($id)
     {
         if (Request::isAjax()) {
@@ -176,7 +113,7 @@ class System extends Base
                 if ($result['admin_id'] != $this->admin_id) {
                     ajaxMsg('0', '你无权操作');//禁用成员不属于当前管理员
                 }
-                $S_admin = getAdmin();
+                $S_admin = getPlatformAdmin();
                 if ($S_admin['id'] != $this->admin_id) {//不是超级管理员
                     if ($id != $S_admin['id']) {
                         ajaxMsg('0', '只能超级管理员更改其它成员密码');
@@ -230,13 +167,5 @@ class System extends Base
         return true;
     }
 
-    public function setScreen()
-    {
-        if (Cookie::has('setScreen')) {
-            Cookie::delete('setScreen');
-        } else {
-            Cookie::set('setScreen', 1);
-        }
-    }
 
 }

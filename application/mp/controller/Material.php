@@ -29,7 +29,7 @@ class   Material extends Base
 
         $weObj = getWechatActiveObj();
         $count = $weObj->getForeverCount();
-        $data['mpid'] = $this->mid;
+        $data['mpid'] = $this->mpid;
         $url = '';
         $text = '';
         switch ($type) {
@@ -208,7 +208,7 @@ class   Material extends Base
             $this->redirect('mp/Material/index', ['type' => 'image', 'from_type' => 1]);
         }
         $model = new \app\common\model\Material();
-        $data = $model->getMaterialList($type, $this->mid, $from_type, 20);
+        $data = $model->getMaterialList($type, $this->mpid, $from_type, 20);
         if ($type == 'news') {
             $news = [];
             foreach ($data as $key => $val) {
@@ -299,7 +299,7 @@ class   Material extends Base
     public function getMeterial($type = '', $from_type = 1)
     {
         $model = new \app\common\model\Material();
-        $result = $model->getMaterialList($type, $this->mid, $from_type);
+        $result = $model->getMaterialList($type, $this->mpid, $from_type);
         $this->assign('page', $result->render());
         $this->assign('type', $type);
         $this->assign('from_type', $from_type);
@@ -311,7 +311,7 @@ class   Material extends Base
     public function getMeterialByImages($type = '', $from_type = 1)
     {
         $model = new \app\common\model\Material();
-        $result = $model->getMaterialList($type, $this->mid, $from_type);
+        $result = $model->getMaterialList($type, $this->mpid, $from_type);
         $this->assign('page', $result->render());
         $this->assign('type', $type);
         $this->assign('from_type', $from_type);
@@ -346,7 +346,7 @@ class   Material extends Base
             ajaxMsg(0, '参数不完整');
         }
         $model = new \app\common\model\Material();
-        $res = $model->delMaterial($media_id, $this->mid);
+        $res = $model->delMaterial($media_id, $this->mpid);
         if ($res)
             ajaxMsg('1', '删除成功');
         else

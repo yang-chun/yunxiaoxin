@@ -22,9 +22,12 @@ use think\facade\Session;
 class Base extends Controller
 {
     public $admin_id;
+    public $mpid;
 
     public function initialize()
     {
+
+        Cookie::set('setScreen', 1);
         if (!is_file(APP_PATH . '../config/database.php') || !is_file(APP_PATH . '/install.lock')) {
             $root = Request::root();
             header('Location: ' . $root . '/?s=install');
@@ -42,6 +45,7 @@ class Base extends Controller
             $this->redirect('admin/Login/index');
         }
         $this->admin_id = $admin['id'];
+        $this->mpid = $admin['mpid'];
         $node = MODULE_NAME . '/' . CONTROLLER_NAME . '/' . ACTION_NAME;
         $t_menu = Db::name('menu')->where('pid', 0)->order('sort ASC')->select();
         $allMenu = Db::name('menu')->order('sort ASC')->select();
@@ -49,6 +53,7 @@ class Base extends Controller
         $topNode = null;
         $menu2 = null;
         $menu_title = '';
+
         if (!empty($nowMenu)) {
             foreach ($t_menu as $key => $val) {//处理顶级菜单高亮
                 if ($val['url'] == $nowMenu['url']) {
@@ -66,6 +71,7 @@ class Base extends Controller
                     }
                 }
             }
+
             $parent = \Tree::getParents($allMenu, $nowMenu['id']);
             $tree = tree_to_list($menu2, 'child', 'sort');
             if ($tree) {
@@ -81,12 +87,15 @@ class Base extends Controller
                 $menu2 = \Tree::getTreeNoFindChild($tree);
             }
         }
+
         if (MODULE_NAME . '/' . CONTROLLER_NAME == 'mp/app') {
             $topNode = 'mp/mp/index';
         }
+        
         if (MODULE_NAME . '/' . CONTROLLER_NAME == 'miniapp/app') {
             $topNode = 'miniapp/miniapp/topnav';
         }
+
         $this->mpListByMenu();
         $config = Config::load(APP_PATH . 'copyright.php');
         $this->assign('t_menu', $t_menu);
@@ -110,7 +119,7 @@ class Base extends Controller
 
     public function mpListByMenu()
     {
-        $list = Db::name('mp')->where(['user_id' => $this->admin_id, 'status' => '1'])->select();
+        $list = Db::name('mp')->where(['admin_id' => $this->admin_id, 'status' => '1'])->select();
         $this->assign('mpByMenu', $list);
     }
 

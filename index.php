@@ -17,5 +17,6 @@ define('ADDON_PATH', __DIR__ . '/addons/');
 define('MINIAPP_PATH', __DIR__ . '/miniapp/');
 define('ADDON_ROUTE','/app/');
 define('EXTEND_PATH',ROOT_PATH . 'extend/');
+
 require __DIR__ . '/thinkphp/base.php';
 Container::get('app',[APP_PATH])->run()->send();

@@ -39,7 +39,11 @@ class App extends Base
             $this->error('应用信息不相符，请检查');
         }
         $addonMenu = isset($addonCfByFile['menu']) ? $addonCfByFile['menu'] : '';
+
         $node = input('node');
+    //     echo "<pre>";
+    // print_r($node);
+    // exit;
         if (!empty($addonMenu) && is_array($addonMenu)) {
             foreach ($addonMenu as $key => $val) {
                 $addonMenu[$key]['show'] = 0;
@@ -64,6 +68,7 @@ class App extends Base
         if (isset($this->addonCfByFile['is_theme']) && $this->addonCfByFile['is_theme'] == true) {
             $isShowConfigMenu = true;
         }
+
         $this->assign('isShowConfigMenu', $isShowConfigMenu);
         $this->assign('node', $node);
         $this->assign('addonMenu', $addonMenu);

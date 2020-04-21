@@ -1,0 +1,18 @@
+{CSS href="__STATIC__/admin/css/gongzicha.css" /}
+<style>
+	*{
+		font-size: 18px !important;
+	}
+</style>
+<div class="detalis_top_box">
+	<div class="top_l">本月收入</div>
+	<div class="top_r">{$salary_final}</div>
+</div>
+	<div class="detalis_content_box">
+	{foreach name="$list" id="val" key="title"}
+		<div class="detalis_list">
+			<div class="title">{$title}</div>
+			<div class="cont">{$val}</div>
+		</div>
+	{/foreach}
+</div>

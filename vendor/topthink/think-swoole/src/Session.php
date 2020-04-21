@@ -13,7 +13,7 @@ namespace think\swoole;
 use Swoole\Table;
 use think\Container;
 use think\facade\Cache;
-use think\facade\Cookie;
+use think\facade\Cookie as ThinkCookie;
 use think\Session as BaseSession;
 
 /**
@@ -103,17 +103,24 @@ class Session extends BaseSession
      */
     public function setId($id, $expire = null)
     {
-        Cookie::set($this->sessionName, $id, $expire);
+        ThinkCookie::set($this->sessionName, $id, $expire);
     }
 
     /**
      * 获取session_id
      * @access public
+     * @param  bool        $regenerate 不存在是否自动生成
      * @return string
      */
-    public function getId()
+    public function getId($regenerate = true)
     {
-        return Cookie::get($this->sessionName) ?: '';
+        $sessionId = ThinkCookie::get($this->sessionName) ?: '';
+
+        if (!$sessionId && $regenerate) {
+            $sessionId = $this->regenerate();
+        }
+        
+        return $sessionId;
     }
 
     /**
@@ -129,9 +136,7 @@ class Session extends BaseSession
 
         $sessionId = $this->getId();
 
-        if ($sessionId) {
-            $this->setSession($sessionId, $name, $value);
-        }
+        $this->setSession($sessionId, $name, $value);
     }
 
     /**
@@ -170,9 +175,7 @@ class Session extends BaseSession
 
         $sessionId = $this->getId();
 
-        if ($sessionId) {
-            return $this->readSession($sessionId, $name);
-        }
+        return $this->readSession($sessionId, $name);
     }
 
     /**
@@ -216,7 +219,7 @@ class Session extends BaseSession
     {
         empty($this->init) && $this->boot();
 
-        $sessionId = $this->getId();
+        $sessionId = $this->getId(false);
 
         if ($sessionId) {
             $this->deleteSession($sessionId, $name);
@@ -268,12 +271,11 @@ class Session extends BaseSession
     {
         empty($this->init) && $this->boot();
 
-        $sessionId = $this->getId();
+        $sessionId = $this->getId(false);
 
         if ($sessionId) {
             $this->clearSession($sessionId);
         }
-
     }
 
     /**
@@ -302,7 +304,8 @@ class Session extends BaseSession
     public function has($name, $prefix = null)
     {
         empty($this->init) && $this->boot();
-        $sessionId = $this->getId();
+
+        $sessionId = $this->getId(false);
 
         if ($sessionId) {
             return $this->hasSession($sessionId, $name);
@@ -344,10 +347,6 @@ class Session extends BaseSession
     {
         $sessionId = $this->getId();
 
-        if (!$sessionId) {
-            $sessionId = $this->regenerate();
-        }
-
         // 读取缓存数据
         if (empty($this->data[$sessionId])) {
             if (!empty($this->config['use_swoole_table'])) {
@@ -377,7 +376,7 @@ class Session extends BaseSession
      */
     public function destroy()
     {
-        $sessionId = $this->getId();
+        $sessionId = $this->getId(false);
 
         if ($sessionId) {
             $this->destroySession($sessionId);
