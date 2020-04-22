@@ -70,7 +70,7 @@
           <a class="" href="javascript:;">{$t.name}</a>
           <dl class="layui-nav-child ">
             {volist name="$t['child']" id="c"}
-            <dd class="{eq name="c['shows']" value="1"}layui-this{/eq}"><a href="{:url($c['url'])}">{$c.name}</a></dd>
+            <dd style="padding-left:10px;" class="{eq name="c['shows']" value="1"}layui-this{/eq}"><a href="{:url($c['url'])}">{$c.name}</a></dd>
             {/volist}
           </dl>
         </li>

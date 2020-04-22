@@ -22,7 +22,6 @@ class Entr
 
     public function index($mpid)
     {
-
         if (empty($_GET['echostr']) && empty($_GET["signature"]) && empty ($_GET["nonce"])) {
             exit('Access denied');
         }
