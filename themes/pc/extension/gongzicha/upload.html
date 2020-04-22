@@ -1,0 +1,88 @@
+{extend name="../admin/common/base" /}
+{block name="body"}
+<style>
+  .margin{
+    margin: 30px 0;
+  }
+  .file_input{
+
+  }
+  .file {
+      display: none;
+  }
+
+  .margin_left{
+    margin-left: 30px;
+  }
+  .prompt{
+    color: #666;
+    margin-top: 8px;
+  }
+</style>
+<body>
+  <form id="uploadForm" enctype="multipart/form-data">
+      <div class="margin_left">
+        <input type="text" name="file_name"  placeholder="请输入标题" autocomplete="off" class="layui-input" style="width: 300px">
+        <div class="prompt">例如：圣源复1月工资</div>
+        <button type="button" class="layui-btn margin" id="test1">
+          <i class="layui-icon">&#xe67c;</i>上传文件
+        </button>
+      </div>
+  </form>
+  <div class="margin_left">
+    <button class="layui-btn" id="upload">立即提交</button>
+  </div>
+
+</body>
+</html>
+<script>  
+  layui.use('upload', function(){
+    var upload = layui.upload;
+    //执行实例
+    var uploadInst = upload.render({
+      elem: '#test1' //绑定元素
+      ,auto: false //是否自动上传
+      ,accept:'file'
+    });
+  });
+
+  $(function () {
+      $("#upload").click(function () {
+          var formData = new FormData($('#uploadForm')[0]);
+          var index;
+          $.ajax({
+              type: 'POST',
+              url: "{:url('addExcel')}",
+              data: formData,
+              cache: false,
+              processData: false,
+              contentType: false,
+              beforeSend:function(XMLHttpRequest){
+                index = layer.load();
+              }, 
+
+          }).success(function (data) {
+            if (data.status == 0) {
+              layer.close(index);
+              layer.msg(data.msg,{time:1000});
+              return;
+            }
+            layer.alert(data,{
+              area: ['400px', '300px'],
+              cancel: function(index, layero){ 
+                location.reload();
+              }
+            },function(index){
+              location.reload();
+              layer.close(index);
+            });
+          }).error(function () {  
+              alert("上传失败");
+              layer.close(index);
+          });
+
+      });
+  });
+
+</script>
+{/block}

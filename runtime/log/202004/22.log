@@ -1,0 +1,271 @@
+---------------------------------------------------------------
+
+[2020-04-22T11:14:51+08:00] 127.0.0.1 GET www.rha.com/extension/gongzicha/preview.html?excel_id=105
+[运行时间：0.207758s] [吞吐率：4.81req/s] [内存消耗：3,528.38kb] [文件加载：97]
+[ info ] [ LANG ] E:\xampp\htdocs\rhaphp\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+)
+[ info ] [ HEADER ] array (
+  'host' => 'www.rha.com',
+  'connection' => 'keep-alive',
+  'cache-control' => 'max-age=0',
+  'upgrade-insecure-requests' => '1',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'referer' => 'http://www.rha.com/extension/gongzicha/index.html',
+  'accept-encoding' => 'gzip, deflate',
+  'accept-language' => 'zh-CN,zh;q=0.9,en;q=0.8',
+  'cookie' => 'think_admin=think%3A%7B%22id%22%3A%2219%22%2C%22admin_name%22%3A%22admin%22%2C%22password%22%3A%2299467613c4cf748197365b9ef710fc2d%22%2C%22status%22%3A%221%22%2C%22ip%22%3A%22127.0.0.1%22%2C%22last_time%22%3A%221587374522%22%2C%22rand_str%22%3A%22YVkrIR%22%2C%22padmin_id%22%3A%222%22%2C%22mpid%22%3A%2214%22%2C%22createtime%22%3A%221587020126%22%7D; think_setScreen=1; PHPSESSID=nc4ng343v2dolmd4ecuqubtrm0',
+)
+[ info ] [ PARAM ] array (
+  'excel_id' => '105',
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ VIEW ] E:\xampp\htdocs\rhaphp\themes/pc/extension/gongzicha\preview.html [ array (
+  0 => 'mpByMenu',
+  1 => 't_menu',
+  2 => 'topNode',
+  3 => 'menu_title',
+  4 => 'node',
+  5 => 'menu',
+  6 => 'controller_name',
+  7 => 'action_name',
+  8 => 'admin',
+  9 => 'mpInfo',
+  10 => 'copy',
+  11 => 'setScreen',
+  12 => 'mpid',
+  13 => 'content',
+  14 => 'list',
+  15 => 'excel_id',
+) ]
+[ sql ] [ DB ] CONNECT:[ UseTime:0.011259s ] mysql:host=127.0.0.1;port=3306;dbname=rhaphp;charset=utf8mb4
+[ sql ] [ SQL ] SHOW COLUMNS FROM `rh_admin` [ RunTime:0.064116s ]
+[ sql ] [ SQL ] SELECT `password` FROM `rh_admin` WHERE  `id` = 19 LIMIT 1 [ RunTime:0.000634s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `rh_menu` [ RunTime:0.008061s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_menu` WHERE  `pid` = 0 ORDER BY `sort` ASC [ RunTime:0.002584s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_menu` ORDER BY `sort` ASC [ RunTime:0.000711s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_menu` WHERE  `url` = 'extension/gongzicha/preview' ORDER BY `sort` ASC LIMIT 1 [ RunTime:0.000482s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_menu` WHERE  `pid` = 0  AND `url` = 'mp/mp/index' ORDER BY `sort` ASC LIMIT 1 [ RunTime:0.000446s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `rh_mp` [ RunTime:0.005244s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_mp` WHERE  `admin_id` = 19  AND `status` = 1 [ RunTime:0.001804s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_mp` WHERE  `id` = 14 LIMIT 1 [ RunTime:0.001037s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_mp` WHERE  `id` = 14  AND `is_use` = 1 LIMIT 1 [ RunTime:0.001438s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `rh_excel_cache` [ RunTime:0.007110s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_excel_cache` WHERE  `excel_id` = 105 LIMIT 10 [ RunTime:0.045502s ]
+---------------------------------------------------------------
+
+[2020-04-22T11:15:21+08:00] 127.0.0.1 GET www.rha.com/extension/gongzicha/preview.html?excel_id=105
+[运行时间：0.185285s] [吞吐率：5.40req/s] [内存消耗：3,323.89kb] [文件加载：95]
+[ info ] [ LANG ] E:\xampp\htdocs\rhaphp\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+)
+[ info ] [ HEADER ] array (
+  'host' => 'www.rha.com',
+  'connection' => 'keep-alive',
+  'cache-control' => 'max-age=0',
+  'upgrade-insecure-requests' => '1',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'referer' => 'http://www.rha.com/extension/gongzicha/index.html',
+  'accept-encoding' => 'gzip, deflate',
+  'accept-language' => 'zh-CN,zh;q=0.9,en;q=0.8',
+  'cookie' => 'think_admin=think%3A%7B%22id%22%3A%2219%22%2C%22admin_name%22%3A%22admin%22%2C%22password%22%3A%2299467613c4cf748197365b9ef710fc2d%22%2C%22status%22%3A%221%22%2C%22ip%22%3A%22127.0.0.1%22%2C%22last_time%22%3A%221587374522%22%2C%22rand_str%22%3A%22YVkrIR%22%2C%22padmin_id%22%3A%222%22%2C%22mpid%22%3A%2214%22%2C%22createtime%22%3A%221587020126%22%7D; think_setScreen=1; PHPSESSID=nc4ng343v2dolmd4ecuqubtrm0',
+)
+[ info ] [ PARAM ] array (
+  'excel_id' => '105',
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ VIEW ] E:\xampp\htdocs\rhaphp\themes/pc/extension/gongzicha\preview.html [ array (
+  0 => 'mpByMenu',
+  1 => 't_menu',
+  2 => 'topNode',
+  3 => 'menu_title',
+  4 => 'node',
+  5 => 'menu',
+  6 => 'controller_name',
+  7 => 'action_name',
+  8 => 'admin',
+  9 => 'mpInfo',
+  10 => 'copy',
+  11 => 'setScreen',
+  12 => 'mpid',
+  13 => 'content',
+  14 => 'list',
+  15 => 'excel_id',
+) ]
+[ sql ] [ DB ] CONNECT:[ UseTime:0.000992s ] mysql:host=127.0.0.1;port=3306;dbname=rhaphp;charset=utf8mb4
+[ sql ] [ SQL ] SHOW COLUMNS FROM `rh_admin` [ RunTime:0.056738s ]
+[ sql ] [ SQL ] SELECT `password` FROM `rh_admin` WHERE  `id` = 19 LIMIT 1 [ RunTime:0.000462s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `rh_menu` [ RunTime:0.004111s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_menu` WHERE  `pid` = 0 ORDER BY `sort` ASC [ RunTime:0.000542s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_menu` ORDER BY `sort` ASC [ RunTime:0.000617s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_menu` WHERE  `url` = 'extension/gongzicha/preview' ORDER BY `sort` ASC LIMIT 1 [ RunTime:0.000502s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_menu` WHERE  `pid` = 0  AND `url` = 'mp/mp/index' ORDER BY `sort` ASC LIMIT 1 [ RunTime:0.024101s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `rh_mp` [ RunTime:0.011480s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_mp` WHERE  `admin_id` = 19  AND `status` = 1 [ RunTime:0.001401s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_mp` WHERE  `id` = 14  AND `is_use` = 1 LIMIT 1 [ RunTime:0.001987s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `rh_excel_cache` [ RunTime:0.006293s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_excel_cache` WHERE  `excel_id` = 105 LIMIT 10 [ RunTime:0.006688s ]
+---------------------------------------------------------------
+
+[2020-04-22T11:15:22+08:00] 127.0.0.1 GET www.rha.com/extension/gongzicha/preview.html?excel_id=105
+[运行时间：0.117556s] [吞吐率：8.51req/s] [内存消耗：3,323.88kb] [文件加载：95]
+[ info ] [ LANG ] E:\xampp\htdocs\rhaphp\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+)
+[ info ] [ HEADER ] array (
+  'host' => 'www.rha.com',
+  'connection' => 'keep-alive',
+  'cache-control' => 'max-age=0',
+  'upgrade-insecure-requests' => '1',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'referer' => 'http://www.rha.com/extension/gongzicha/index.html',
+  'accept-encoding' => 'gzip, deflate',
+  'accept-language' => 'zh-CN,zh;q=0.9,en;q=0.8',
+  'cookie' => 'think_admin=think%3A%7B%22id%22%3A%2219%22%2C%22admin_name%22%3A%22admin%22%2C%22password%22%3A%2299467613c4cf748197365b9ef710fc2d%22%2C%22status%22%3A%221%22%2C%22ip%22%3A%22127.0.0.1%22%2C%22last_time%22%3A%221587374522%22%2C%22rand_str%22%3A%22YVkrIR%22%2C%22padmin_id%22%3A%222%22%2C%22mpid%22%3A%2214%22%2C%22createtime%22%3A%221587020126%22%7D; think_setScreen=1; PHPSESSID=nc4ng343v2dolmd4ecuqubtrm0',
+)
+[ info ] [ PARAM ] array (
+  'excel_id' => '105',
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ VIEW ] E:\xampp\htdocs\rhaphp\themes/pc/extension/gongzicha\preview.html [ array (
+  0 => 'mpByMenu',
+  1 => 't_menu',
+  2 => 'topNode',
+  3 => 'menu_title',
+  4 => 'node',
+  5 => 'menu',
+  6 => 'controller_name',
+  7 => 'action_name',
+  8 => 'admin',
+  9 => 'mpInfo',
+  10 => 'copy',
+  11 => 'setScreen',
+  12 => 'mpid',
+  13 => 'content',
+  14 => 'list',
+  15 => 'excel_id',
+) ]
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001038s ] mysql:host=127.0.0.1;port=3306;dbname=rhaphp;charset=utf8mb4
+[ sql ] [ SQL ] SHOW COLUMNS FROM `rh_admin` [ RunTime:0.012357s ]
+[ sql ] [ SQL ] SELECT `password` FROM `rh_admin` WHERE  `id` = 19 LIMIT 1 [ RunTime:0.001647s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `rh_menu` [ RunTime:0.009482s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_menu` WHERE  `pid` = 0 ORDER BY `sort` ASC [ RunTime:0.001039s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_menu` ORDER BY `sort` ASC [ RunTime:0.000729s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_menu` WHERE  `url` = 'extension/gongzicha/preview' ORDER BY `sort` ASC LIMIT 1 [ RunTime:0.000490s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_menu` WHERE  `pid` = 0  AND `url` = 'mp/mp/index' ORDER BY `sort` ASC LIMIT 1 [ RunTime:0.000701s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `rh_mp` [ RunTime:0.009206s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_mp` WHERE  `admin_id` = 19  AND `status` = 1 [ RunTime:0.000825s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_mp` WHERE  `id` = 14  AND `is_use` = 1 LIMIT 1 [ RunTime:0.002334s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `rh_excel_cache` [ RunTime:0.010560s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_excel_cache` WHERE  `excel_id` = 105 LIMIT 10 [ RunTime:0.008471s ]
+---------------------------------------------------------------
+
+[2020-04-22T11:15:22+08:00] 127.0.0.1 GET www.rha.com/extension/gongzicha/preview.html?excel_id=105
+[运行时间：0.135128s] [吞吐率：7.40req/s] [内存消耗：3,323.89kb] [文件加载：95]
+[ info ] [ LANG ] E:\xampp\htdocs\rhaphp\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+)
+[ info ] [ HEADER ] array (
+  'host' => 'www.rha.com',
+  'connection' => 'keep-alive',
+  'cache-control' => 'max-age=0',
+  'upgrade-insecure-requests' => '1',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'referer' => 'http://www.rha.com/extension/gongzicha/index.html',
+  'accept-encoding' => 'gzip, deflate',
+  'accept-language' => 'zh-CN,zh;q=0.9,en;q=0.8',
+  'cookie' => 'think_admin=think%3A%7B%22id%22%3A%2219%22%2C%22admin_name%22%3A%22admin%22%2C%22password%22%3A%2299467613c4cf748197365b9ef710fc2d%22%2C%22status%22%3A%221%22%2C%22ip%22%3A%22127.0.0.1%22%2C%22last_time%22%3A%221587374522%22%2C%22rand_str%22%3A%22YVkrIR%22%2C%22padmin_id%22%3A%222%22%2C%22mpid%22%3A%2214%22%2C%22createtime%22%3A%221587020126%22%7D; think_setScreen=1; PHPSESSID=nc4ng343v2dolmd4ecuqubtrm0',
+)
+[ info ] [ PARAM ] array (
+  'excel_id' => '105',
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ VIEW ] E:\xampp\htdocs\rhaphp\themes/pc/extension/gongzicha\preview.html [ array (
+  0 => 'mpByMenu',
+  1 => 't_menu',
+  2 => 'topNode',
+  3 => 'menu_title',
+  4 => 'node',
+  5 => 'menu',
+  6 => 'controller_name',
+  7 => 'action_name',
+  8 => 'admin',
+  9 => 'mpInfo',
+  10 => 'copy',
+  11 => 'setScreen',
+  12 => 'mpid',
+  13 => 'content',
+  14 => 'list',
+  15 => 'excel_id',
+) ]
+[ sql ] [ DB ] CONNECT:[ UseTime:0.010056s ] mysql:host=127.0.0.1;port=3306;dbname=rhaphp;charset=utf8mb4
+[ sql ] [ SQL ] SHOW COLUMNS FROM `rh_admin` [ RunTime:0.010118s ]
+[ sql ] [ SQL ] SELECT `password` FROM `rh_admin` WHERE  `id` = 19 LIMIT 1 [ RunTime:0.000679s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `rh_menu` [ RunTime:0.004814s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_menu` WHERE  `pid` = 0 ORDER BY `sort` ASC [ RunTime:0.001422s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_menu` ORDER BY `sort` ASC [ RunTime:0.000698s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_menu` WHERE  `url` = 'extension/gongzicha/preview' ORDER BY `sort` ASC LIMIT 1 [ RunTime:0.001695s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_menu` WHERE  `pid` = 0  AND `url` = 'mp/mp/index' ORDER BY `sort` ASC LIMIT 1 [ RunTime:0.001196s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `rh_mp` [ RunTime:0.009844s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_mp` WHERE  `admin_id` = 19  AND `status` = 1 [ RunTime:0.000805s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_mp` WHERE  `id` = 14  AND `is_use` = 1 LIMIT 1 [ RunTime:0.000805s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `rh_excel_cache` [ RunTime:0.004898s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_excel_cache` WHERE  `excel_id` = 105 LIMIT 10 [ RunTime:0.006088s ]
+---------------------------------------------------------------
+
+[2020-04-22T11:15:22+08:00] 127.0.0.1 GET www.rha.com/extension/gongzicha/preview.html?excel_id=105
+[运行时间：0.110934s] [吞吐率：9.01req/s] [内存消耗：3,323.89kb] [文件加载：95]
+[ info ] [ LANG ] E:\xampp\htdocs\rhaphp\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+)
+[ info ] [ HEADER ] array (
+  'host' => 'www.rha.com',
+  'connection' => 'keep-alive',
+  'cache-control' => 'max-age=0',
+  'upgrade-insecure-requests' => '1',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'referer' => 'http://www.rha.com/extension/gongzicha/index.html',
+  'accept-encoding' => 'gzip, deflate',
+  'accept-language' => 'zh-CN,zh;q=0.9,en;q=0.8',
+  'cookie' => 'think_admin=think%3A%7B%22id%22%3A%2219%22%2C%22admin_name%22%3A%22admin%22%2C%22password%22%3A%2299467613c4cf748197365b9ef710fc2d%22%2C%22status%22%3A%221%22%2C%22ip%22%3A%22127.0.0.1%22%2C%22last_time%22%3A%221587374522%22%2C%22rand_str%22%3A%22YVkrIR%22%2C%22padmin_id%22%3A%222%22%2C%22mpid%22%3A%2214%22%2C%22createtime%22%3A%221587020126%22%7D; think_setScreen=1; PHPSESSID=nc4ng343v2dolmd4ecuqubtrm0',
+)
+[ info ] [ PARAM ] array (
+  'excel_id' => '105',
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ VIEW ] E:\xampp\htdocs\rhaphp\themes/pc/extension/gongzicha\preview.html [ array (
+  0 => 'mpByMenu',
+  1 => 't_menu',
+  2 => 'topNode',
+  3 => 'menu_title',
+  4 => 'node',
+  5 => 'menu',
+  6 => 'controller_name',
+  7 => 'action_name',
+  8 => 'admin',
+  9 => 'mpInfo',
+  10 => 'copy',
+  11 => 'setScreen',
+  12 => 'mpid',
+  13 => 'content',
+  14 => 'list',
+  15 => 'excel_id',
+) ]
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001257s ] mysql:host=127.0.0.1;port=3306;dbname=rhaphp;charset=utf8mb4
+[ sql ] [ SQL ] SHOW COLUMNS FROM `rh_admin` [ RunTime:0.009616s ]
+[ sql ] [ SQL ] SELECT `password` FROM `rh_admin` WHERE  `id` = 19 LIMIT 1 [ RunTime:0.000535s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `rh_menu` [ RunTime:0.003921s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_menu` WHERE  `pid` = 0 ORDER BY `sort` ASC [ RunTime:0.000317s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_menu` ORDER BY `sort` ASC [ RunTime:0.000340s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_menu` WHERE  `url` = 'extension/gongzicha/preview' ORDER BY `sort` ASC LIMIT 1 [ RunTime:0.000247s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_menu` WHERE  `pid` = 0  AND `url` = 'mp/mp/index' ORDER BY `sort` ASC LIMIT 1 [ RunTime:0.000284s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `rh_mp` [ RunTime:0.009679s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_mp` WHERE  `admin_id` = 19  AND `status` = 1 [ RunTime:0.001283s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_mp` WHERE  `id` = 14  AND `is_use` = 1 LIMIT 1 [ RunTime:0.001618s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `rh_excel_cache` [ RunTime:0.004294s ]
+[ sql ] [ SQL ] SELECT * FROM `rh_excel_cache` WHERE  `excel_id` = 105 LIMIT 10 [ RunTime:0.004819s ]

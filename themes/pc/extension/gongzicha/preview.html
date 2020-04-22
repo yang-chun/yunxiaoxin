@@ -1,0 +1,89 @@
+{extend name="../admin/common/base" /}
+{block name="body"}
+{CSS href="__STATIC__/admin/css/pc-style.css" /}
+<div class="layui-card-body">
+    <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+        <div class="layui-inline">工资单名称：</div>
+        <div class="layui-inline">
+            <input class="layui-input" name="excel_name" value="" placeholder="例如:圣源复1月工资">
+        </div>
+
+    </div>
+    <div class="layui-form layui-border-box"  style="width:100%;  overflow:scroll;">
+        <table cellspacing="0" cellpadding="0" border="0" class="layui-table">
+            <thead>
+                <tr>
+                    {foreach name="$content" id="t" key="title"}
+                        <th>
+                            <div class="" ><span>{$title}</span></div>
+                        </th>
+                    {/foreach}
+                </tr>
+            <tbody>
+                {volist name="$list" id="vo"}
+                    <tr data-index="0">
+                        {foreach name="$vo" id="volist"}
+                            <td data-field="id" data-key="1-0-0" class="">
+                                <div class="layui-table-cell laytable-cell-1-0-0">{$volist}</div>
+                            </td>
+                        {/foreach}
+                    </tr>
+                {/volist}
+            </tbody>
+            </thead>
+        </table>
+    </div>
+    <div class="note">备注：为防止误操作，实例将展示上传工资表格的前10行数据</div>
+    <div class="preview_button">
+        <button type="button" class="layui-btn layui-btn-danger" id="cancel" >取消</button>
+        <button type="button" class="layui-btn layui-btn-normal" id="generate">生成工资单</button>
+    </div>
+</div>
+<script>    
+    // 取消
+    $('#cancel').click(function(){
+        $.get("{:url('cancel')}?excel_id="+{$excel_id}, function(msg){
+            if (msg.status == '1') {
+                location.href = "{:url('index')}";
+            }
+        });
+    })
+
+
+    $('#generate').click(function(){
+        var excel_name = $("input[name='excel_name' ] ").val();
+        if (!excel_name) {
+            layui.use('layer',function () {
+                layer = layui.layer;
+                layer.msg('请输入工资单名称！', {time: 1500}); 
+            })
+            return;
+        }
+        var index;
+        $.ajax({
+            type: "GET",
+            url: "{:url('generate')}",
+            data: {
+                excel_id:{$excel_id},
+                excel_name:excel_name
+            },
+            beforeSend:function(){
+                layui.use('layer',function () {
+                    index = layer.load();
+                })
+            },
+            success: function(msg){
+                if (msg.status == 0) {
+                    layer.msg(msg.msg,{time:1000});
+                    layer.close(index);
+                }else{
+                    layer.msg(msg.msg,{time:800});
+                    location.href = "{:url('index')}";
+                    layer.close(index);
+                }
+            }
+        });
+
+    })
+</script>
+{/block}

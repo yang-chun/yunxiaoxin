@@ -1,10 +1,31 @@
 .layui-table tr th{
     text-align: center;
+    min-width: 180px;
 }
+
 .layui-table tr td{
     text-align: center;
 }
+
 .No_info{
 	text-align: center;
 	color:#666 ;
 }
+
+.preview_button{
+	margin-top: 10px;
+	margin-bottom: 20px;
+	display: flex;
+	justify-content: center;
+}
+
+.preview_button button{
+	margin: 20px;
+}
+
+.note{
+	margin-top: 20px;
+	margin-bottom: 10px;
+	color: #999;
+}
+
